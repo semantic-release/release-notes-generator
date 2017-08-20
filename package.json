@@ -64,7 +64,8 @@
     "github",
     "publish",
     "release",
-    "semantic-release"
+    "semantic-release",
+    "release-note-generator"
   ],
   "license": "MIT",
   "main": "lib/index.js",
