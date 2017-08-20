@@ -47,7 +47,7 @@
     "pify": "^3.0.0",
     "prettier": "^1.5.3",
     "rimraf": "^2.6.1",
-    "semantic-release": "^7.0.1",
+    "semantic-release": "^8.0.0",
     "tempy": "^0.1.0"
   },
   "engines": {
