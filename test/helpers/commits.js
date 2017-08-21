@@ -6,10 +6,10 @@ import pEachSeries from 'p-each-series';
 /**
  * Create a temporary git repository with commits.
  *  
- * @method commists
+ * @method commits
  * @param {Array<string>} messages the commit message (1 commit per message)
  */
-export default async function commists(messages) {
+export default async function commits(messages) {
   const dir = tempy.directory();
 
   process.chdir(dir);

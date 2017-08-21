@@ -44,6 +44,39 @@ test.serial('Accept an additionnal argument', async t => {
   t.regex(changelog, /\* Second feature .*, closes #456/);
 });
 
+test.serial('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
+  const eslintChangelogConfig = await pify(require('conventional-changelog-eslint'))();
+
+  await commits(['##Fix## First fix (fixes #123)', '##Update## Second feature (fixes #456)']);
+  const changelog = await pify(releaseNotesGenerator)(
+    {
+      parserOpts: {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'message']},
+      writerOpts: eslintChangelogConfig.writerOpts,
+    },
+    {}
+  );
+
+  t.regex(changelog, /### Fix/);
+  t.regex(changelog, /\* First fix .*, closes #123/);
+  t.regex(changelog, /### Update/);
+  t.regex(changelog, /\* Second feature .*, closes #456/);
+});
+
+test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', async t => {
+  await commits(['fix(scope1): 2 First fix (fixes #123)', 'fix(scope2): 1 Second fix (fixes #456)']);
+  const changelog = await pify(releaseNotesGenerator)(
+    {
+      preset: 'angular',
+      parserOpts: {headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/},
+      writerOpts: {commitsSort: ['subject', 'scope']},
+    },
+    {}
+  );
+
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
+});
+
 test.serial('Throw SemanticReleaseError if "preset" doesn`t exist', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const error = await t.throws(
@@ -70,8 +103,10 @@ test.serial('Handle error in "conventional-changelog" and wrap in SemanticReleas
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const error = await t.throws(
     pify(releaseNotesGenerator)({
-      transform() {
-        throw new Error();
+      writerOpts: {
+        transform() {
+          throw new Error();
+        },
       },
     }),
     /Error in conventional-changelog/
