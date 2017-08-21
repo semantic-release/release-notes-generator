@@ -14,7 +14,9 @@
   "dependencies": {
     "@semantic-release/error": "^1.0.0",
     "conventional-changelog-angular": "^1.4.0",
-    "conventional-changelog-core": "^1.9.0"
+    "conventional-changelog-core": "^1.9.0",
+    "lodash": "^4.17.4",
+    "pify": "^3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^3.1.2",
@@ -25,7 +27,11 @@
     "babel-eslint": "^7.2.3",
     "codecov": "^2.3.0",
     "commitizen": "^2.9.6",
+    "conventional-changelog-atom": "^0.1.1",
+    "conventional-changelog-ember": "^0.2.6",
     "conventional-changelog-eslint": "^0.2.0",
+    "conventional-changelog-express": "^0.2.0",
+    "conventional-changelog-jshint": "^0.2.0",
     "eslint": "^4.5.0",
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-ava": "^4.2.1",
@@ -44,7 +50,6 @@
     "husky": "^0.14.3",
     "nyc": "^11.1.0",
     "p-each-series": "^1.0.0",
-    "pify": "^3.0.0",
     "prettier": "^1.5.3",
     "rimraf": "^2.6.1",
     "semantic-release": "^8.0.0",
@@ -64,14 +69,14 @@
     "github",
     "publish",
     "release",
-    "semantic-release",
-    "release-note-generator"
+    "release-note-generator",
+    "semantic-release"
   ],
   "license": "MIT",
   "main": "lib/index.js",
   "nyc": {
     "include": [
-      "lib/index.js"
+      "lib/**/*.js"
     ]
   },
   "peerDependencies": {
