@@ -4,6 +4,12 @@ import SemanticReleaseError from '@semantic-release/error';
 import releaseNotesGenerator from '../lib/index';
 import commits from './helpers/commits';
 
+const cwd = process.cwd();
+
+test.afterEach.always(() => {
+  process.chdir(cwd);
+});
+
 test.serial('Use "conventional-changelog-angular" by default', async t => {
   await commits(['fix(scope1): First fix', 'feat(scope2): Second feature']);
   const changelog = await pify(releaseNotesGenerator)({});
