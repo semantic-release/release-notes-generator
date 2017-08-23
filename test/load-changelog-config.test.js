@@ -125,7 +125,7 @@ test(loadConfig, 'express');
 test(loadPreset, 'jshint');
 test(loadConfig, 'jshint');
 
-test('Throw SemanticReleaseError if "config" doesn`t exist', async t => {
+test('Throw "SemanticReleaseError" if "config" doesn`t exist', async t => {
   const error = await t.throws(
     loadChangelogConfig({config: 'unknown-config'}),
     /Config: "unknown-config" does not exist:/
@@ -135,7 +135,7 @@ test('Throw SemanticReleaseError if "config" doesn`t exist', async t => {
   t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
-test('Throw SemanticReleaseError if "preset" doesn`t exist', async t => {
+test('Throw "SemanticReleaseError" if "preset" doesn`t exist', async t => {
   const error = await t.throws(
     loadChangelogConfig({preset: 'unknown-preset'}),
     /Preset: "unknown-preset" does not exist:/

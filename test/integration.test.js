@@ -20,7 +20,7 @@ test.serial('Use "conventional-changelog-angular" by default', async t => {
   t.regex(changelog, /\* \*\*scope2:\*\* Second feature/);
 });
 
-test.serial('Accept a preset option', async t => {
+test.serial('Accept a "preset" option', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const changelog = await pify(releaseNotesGenerator)({preset: 'eslint'});
 
@@ -30,7 +30,7 @@ test.serial('Accept a preset option', async t => {
   t.regex(changelog, /\* Second feature .*, closes #456/);
 });
 
-test.serial('Accept a config option', async t => {
+test.serial('Accept a "config" option', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const changelog = await pify(releaseNotesGenerator)({config: 'conventional-changelog-eslint'});
 
@@ -83,7 +83,7 @@ test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', a
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
 });
 
-test.serial('Throw SemanticReleaseError if "preset" doesn`t exist', async t => {
+test.serial('Throw "SemanticReleaseError" if "preset" doesn`t exist', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const error = await t.throws(
     pify(releaseNotesGenerator)({preset: 'unknown-preset'}),
@@ -94,7 +94,7 @@ test.serial('Throw SemanticReleaseError if "preset" doesn`t exist', async t => {
   t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
-test.serial('Throw SemanticReleaseError if "config" doesn`t exist', async t => {
+test.serial('Throw "SemanticReleaseError" if "config" doesn`t exist', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const error = await t.throws(
     pify(releaseNotesGenerator)({config: 'unknown-config'}),
@@ -105,7 +105,7 @@ test.serial('Throw SemanticReleaseError if "config" doesn`t exist', async t => {
   t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
-test.serial('Handle error in "conventional-changelog" and wrap in SemanticReleaseError', async t => {
+test.serial('Handle error in "conventional-changelog" and wrap in "SemanticReleaseError"', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const error = await t.throws(
     pify(releaseNotesGenerator)({
