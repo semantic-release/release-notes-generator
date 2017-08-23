@@ -36,7 +36,7 @@ Additionnal options can be set within the plugin definition in `package.json` to
 ```json
 {
   "release": {
-    "analyzeCommits": {
+    "generateNotes": {
       "path": "sr-release-notes-generator",
       "preset": "angular",
       "parserOpts": {
@@ -68,7 +68,7 @@ The following example uses [Angular convention](https://github.com/conventional-
 ```json
 {
   "release": {
-    "analyzeCommits": {
+    "generateNotes": {
       "preset": "angular",
       "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"],
@@ -88,7 +88,7 @@ The following example uses [Angular convention](https://github.com/conventional-
 ```json
 {
   "release": {
-    "analyzeCommits": {
+    "generateNotes": {
       "path": "sr-release-notes-generator",
       "preset": "angular",
       "writerOpts": {
