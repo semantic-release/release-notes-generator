@@ -10,7 +10,7 @@ Customizable release-notes-generator plugin for [semantic-release](https://githu
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/sr-release-notes-generator.svg)](https://travis-ci.org/vanduynslagerp/sr-release-notes-generator)
-[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/karma-postcss-preprocessor.svg)](https://codeclimate.com/github/vanduynslagerp/karma-postcss-preprocessor)
+[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/sr-release-notes-generator.svg)](https://codeclimate.com/github/vanduynslagerp/sr-release-notes-generator)
 [![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/sr-release-notes-generator.svg)](https://codecov.io/gh/vanduynslagerp/sr-release-notes-generator)
 
 ## Install
