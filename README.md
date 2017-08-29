@@ -69,6 +69,7 @@ The following example uses [Angular convention](https://github.com/conventional-
 {
   "release": {
     "generateNotes": {
+      "path": "sr-release-notes-generator",
       "preset": "angular",
       "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"],
