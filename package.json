@@ -54,7 +54,7 @@
     "rimraf": "^2.6.1",
     "semantic-release": "^8.0.0",
     "sr-commit-analyzer": "^2.0.0",
-    "tempy": "^0.1.0"
+    "tempy": "^0.2.0"
   },
   "engines": {
     "node": ">=8"
