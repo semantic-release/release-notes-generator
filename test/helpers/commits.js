@@ -6,7 +6,7 @@ import pEachSeries from 'p-each-series';
 
 /**
  * Create a temporary git repository with commits.
- *  
+ *
  * @method commits
  * @param {Array<string>} messages the commit message (1 commit per message).
  */

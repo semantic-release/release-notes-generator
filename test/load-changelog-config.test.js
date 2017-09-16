@@ -4,7 +4,7 @@ import loadChangelogConfig from './../lib/load/changelog-config';
 
 /**
  * AVA macro to verify that `loadChangelogConfig` return a config object with parserOpts and writerOpts.
- * 
+ *
  * @method loadPreset
  * @param {Object} t AVA assertion library.
  * @param {[type]} preset the `conventional-changelog` preset to test.
@@ -19,7 +19,7 @@ loadPreset.title = (providedTitle, preset) => `${providedTitle} Load "${preset}"
 
 /**
  * AVA macro to verify that `loadChangelogConfig` return a config object with parserOpts and writerOpts.
- * 
+ *
  * @method loadPreset
  * @param {Object} t AVA assertion library.
  * @param {[type]} config the `conventional-changelog` config to test.
