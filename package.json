@@ -1,10 +1,15 @@
 {
-  "name": "sr-release-notes-generator",
+  "name": "@semantic-release/release-notes-generator",
   "description": "Customizable release-notes-generator plugin for semantic-release",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager",
+  "authors": [
+    "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
+    "Gregor Martynus (https://twitter.com/gr2m)",
+    "Pierre Vanduynslager (https://twitter.com/PierreAtHome)"
+  ],
   "bugs": {
-    "url": "https://github.com/vanduynslagerp/sr-release-notes-generator/issues"
+    "url": "https://github.com/semantic-release/release-notes-generator/issues"
   },
   "config": {
     "commitizen": {
@@ -76,7 +81,7 @@
   "files": [
     "lib"
   ],
-  "homepage": "https://github.com/vanduynslagerp/sr-release-notes-generator#readme",
+  "homepage": "https://github.com/semantic-release/release-notes-generator#readme",
   "keywords": [
     "changelog",
     "conventional-changelog",
@@ -123,7 +128,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vanduynslagerp/sr-release-notes-generator.git"
+    "url": "https://github.com/semantic-release/release-notes-generator.git"
   },
   "scripts": {
     "clean": "rimraf coverage && rimraf .nyc_output",
