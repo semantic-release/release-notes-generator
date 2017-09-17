@@ -1,36 +1,22 @@
-# **sr-release-notes-generator**
+# **release-notes-generator**
 
 Customizable release-notes-generator plugin for [semantic-release](https://github.com/semantic-release/semantic-release) based on [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog)
 
-[![npm](https://img.shields.io/npm/v/sr-release-notes-generator.svg)](https://www.npmjs.com/package/sr-release-notes-generator)
-[![npm](https://img.shields.io/npm/dt/sr-release-notes-generator.svg)](https://www.npmjs.com/package/sr-release-notes-generator)
-[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/sr-release-notes-generator.svg)](https://greenkeeper.io/)
-[![license](https://img.shields.io/github/license/vanduynslagerp/sr-release-notes-generator.svg)](https://github.com/vanduynslagerp/sr-release-notes-generator/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/v/@semantic-release/release-notes-generator.svg)](https://www.npmjs.com/package/@semantic-release/release-notes-generator)
+[![npm](https://img.shields.io/npm/dt/@semantic-release/release-notes-generator.svg)](https://www.npmjs.com/package/@semantic-release/release-notes-generator)
+[![Greenkeeper badge](https://badges.greenkeeper.io/semantic-release/release-notes-generator.svg)](https://greenkeeper.io/)
+[![license](https://img.shields.io/github/license/semantic-release/release-notes-generator.svg)](https://github.com/semantic-release/release-notes-generator/blob/master/LICENSE)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-[![Travis](https://img.shields.io/travis/vanduynslagerp/sr-release-notes-generator.svg)](https://travis-ci.org/vanduynslagerp/sr-release-notes-generator)
-[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/sr-release-notes-generator.svg)](https://codeclimate.com/github/vanduynslagerp/sr-release-notes-generator)
-[![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/sr-release-notes-generator.svg)](https://codecov.io/gh/vanduynslagerp/sr-release-notes-generator)
-
-## Install
-```bash
-npm install --save-dev semantic-release sr-release-notes-generator
-```
-
-Set the `generateNotes` plugin for `semantic-release` in `package.json`. See [semantic-release plugins](https://github.com/semantic-release/semantic-release#plugins).
-```json
-{
-  "release": {
-    "generateNotes": "sr-release-notes-generator"
-  }
-}
-```
+[![Travis](https://img.shields.io/travis/semantic-release/release-notes-generator.svg)](https://travis-ci.org/semantic-release/release-notes-generator)
+[![Code Climate](https://img.shields.io/codeclimate/github/semantic-release/release-notes-generator.svg)](https://codeclimate.com/github/semantic-release/release-notes-generator)
+[![Codecov](https://img.shields.io/codecov/c/github/semantic-release/release-notes-generator.svg)](https://codecov.io/gh/semantic-release/release-notes-generator)
 
 ## Options
 
-By default `sr-release-notes-generator` uses the `angular` format described in [Angular convention](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/convention.md).
+By default `release-notes-generator` uses the `angular` format described in [Angular convention](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/convention.md).
 
 Additionnal options can be set within the plugin definition in `package.json` to use a different commit format and to customize it:
 
@@ -38,7 +24,6 @@ Additionnal options can be set within the plugin definition in `package.json` to
 {
   "release": {
     "generateNotes": {
-      "path": "sr-release-notes-generator",
       "preset": "angular",
       "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
@@ -70,7 +55,6 @@ The following example uses [Angular convention](https://github.com/conventional-
 {
   "release": {
     "generateNotes": {
-      "path": "sr-release-notes-generator",
       "preset": "angular",
       "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"],
@@ -91,7 +75,6 @@ The following example uses [Angular convention](https://github.com/conventional-
 {
   "release": {
     "generateNotes": {
-      "path": "sr-release-notes-generator",
       "preset": "angular",
       "writerOpts": {
         "commitsSort": ["subject", "scope"],
