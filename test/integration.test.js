@@ -120,3 +120,13 @@ test.serial('Handle error in "conventional-changelog" and wrap in "SemanticRelea
 
   t.true(error instanceof SemanticReleaseError);
 });
+
+test.serial('Accept an undefined "pluginConfig"', async t => {
+  await commits(['fix(scope1): First fix', 'feat(scope2): Second feature']);
+  const changelog = await pify(releaseNotesGenerator)(undefined);
+
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
+  t.regex(changelog, /### Features/);
+  t.regex(changelog, /\* \*\*scope2:\*\* Second feature/);
+});
