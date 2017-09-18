@@ -41,7 +41,7 @@
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-prettier": "^2.2.0",
+    "eslint-plugin-prettier": "^2.3.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "execa": "^0.8.0",
@@ -67,15 +67,7 @@
       "prettier"
     ],
     "rules": {
-      "prettier/prettier": [
-        2,
-        {
-          "printWidth": 120,
-          "singleQuote": true,
-          "bracketSpacing": false,
-          "trailingComma": "es5"
-        }
-      ]
+      "prettier/prettier": 2
     }
   },
   "files": [
