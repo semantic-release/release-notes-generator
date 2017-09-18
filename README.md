@@ -11,7 +11,6 @@ Customizable release-notes-generator plugin for [semantic-release](https://githu
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 [![Travis](https://img.shields.io/travis/semantic-release/release-notes-generator.svg)](https://travis-ci.org/semantic-release/release-notes-generator)
-[![Code Climate](https://img.shields.io/codeclimate/github/semantic-release/release-notes-generator.svg)](https://codeclimate.com/github/semantic-release/release-notes-generator)
 [![Codecov](https://img.shields.io/codecov/c/github/semantic-release/release-notes-generator.svg)](https://codecov.io/gh/semantic-release/release-notes-generator)
 
 ## Options
