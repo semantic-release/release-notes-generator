@@ -52,7 +52,6 @@
     "prettier": "^1.5.3",
     "rimraf": "^2.6.1",
     "semantic-release": "^8.0.0",
-    "sr-commit-analyzer": "^2.0.0",
     "tempy": "^0.2.0"
   },
   "engines": {
@@ -115,8 +114,7 @@
   "release": {
     "generateNotes": {
       "path": "./lib/index.js"
-    },
-    "analyzeCommits": "sr-commit-analyzer"
+    }
   },
   "repository": {
     "type": "git",
