@@ -83,6 +83,16 @@ test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', a
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
 });
 
+test.serial('Ignore malformatted commits and include valid ones', async t => {
+  await commits(['fix(scope1): First fix', 'Feature => Invalid message']);
+  const changelog = await pify(releaseNotesGenerator)({});
+
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
+  t.notRegex(changelog, /### Features/);
+  t.notRegex(changelog, /Feature => Invalid message/);
+});
+
 test.serial('Throw "SemanticReleaseError" if "preset" doesn`t exist', async t => {
   await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
   const error = await t.throws(
