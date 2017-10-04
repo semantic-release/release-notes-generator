@@ -26,8 +26,6 @@
     "pify": "^3.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^3.1.2",
-    "@commitlint/config-angular": "^3.1.1",
     "ava": "^0.22.0",
     "codecov": "^2.3.0",
     "commitizen": "^2.9.6",
@@ -47,7 +45,6 @@
     "eslint-plugin-standard": "^3.0.1",
     "execa": "^0.8.0",
     "fs-extra": "^4.0.1",
-    "husky": "^0.14.3",
     "nyc": "^11.1.0",
     "p-each-series": "^1.0.0",
     "prettier": "^1.7.2",
@@ -119,10 +116,7 @@
     "clean": "rimraf coverage && rimraf .nyc_output",
     "cm": "git-cz",
     "codecov": "codecov -f coverage/coverage-final.json",
-    "commitmsg": "commitlint -e",
     "lint": "eslint lib test",
-    "precommit": "npm run lint",
-    "prepush": "ava -v",
     "pretest": "npm run clean && npm run lint",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "test": "nyc ava -v"
