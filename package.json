@@ -17,11 +17,13 @@
     }
   },
   "dependencies": {
-    "@semantic-release/error": "^2.0.0",
     "conventional-changelog-angular": "^1.4.0",
-    "conventional-changelog-core": "^1.9.0",
+    "conventional-changelog-writer": "^2.0.1",
+    "conventional-commits-parser": "^2.0.0",
     "get-stream": "^3.0.0",
+    "hosted-git-info": "^2.5.0",
     "import-from": "^2.1.0",
+    "into-stream": "^3.1.0",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
   },
@@ -43,14 +45,10 @@
     "eslint-plugin-prettier": "^2.3.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "execa": "^0.8.0",
-    "fs-extra": "^4.0.1",
     "nyc": "^11.1.0",
-    "p-each-series": "^1.0.0",
     "prettier": "^1.7.2",
     "rimraf": "^2.6.1",
-    "semantic-release": "^8.0.0",
-    "tempy": "^0.2.0"
+    "semantic-release": "^8.0.0"
   },
   "engines": {
     "node": ">=4"
