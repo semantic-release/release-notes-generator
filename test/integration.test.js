@@ -1,91 +1,151 @@
 import test from 'ava';
 import pify from 'pify';
-import SemanticReleaseError from '@semantic-release/error';
 import releaseNotesGenerator from '../lib/index';
-import commits from './helpers/commits';
 
-const cwd = process.cwd();
+const url = 'https://github.com/owner/repo';
+const lastRelease = {gitHead: '123'};
+const nextRelease = {gitHead: '456', version: '1.0.0'};
 
-test.afterEach.always(() => {
-  process.chdir(cwd);
-});
+test('Use "conventional-changelog-angular" by default', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await pify(releaseNotesGenerator)(
+    {},
+    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+  );
 
-test.serial('Use "conventional-changelog-angular" by default', async t => {
-  await commits(['fix(scope1): First fix', 'feat(scope2): Second feature']);
-  const changelog = await pify(releaseNotesGenerator)({});
-
+  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
   t.regex(changelog, /### Bug Fixes/);
-  t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(https://github.com/owner/repo\\/commits\\/111\\)\\)`)
+  );
   t.regex(changelog, /### Features/);
-  t.regex(changelog, /\* \*\*scope2:\*\* Second feature/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(https://github.com/owner/repo\\/commits\\/222\\)\\)`)
+  );
 });
 
-test.serial('Accept a "preset" option', async t => {
-  await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
-  const changelog = await pify(releaseNotesGenerator)({preset: 'eslint'});
+test('Accept a "preset" option', async t => {
+  const commits = [
+    {hash: '111', message: 'Fix: First fix (fixes #123)'},
+    {hash: '222', message: 'Update: Second feature (fixes #456)'},
+  ];
+  const changelog = await pify(releaseNotesGenerator)(
+    {preset: 'eslint'},
+    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+  );
 
+  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
   t.regex(changelog, /### Fix/);
-  t.regex(changelog, /\* First fix .*, closes #123/);
+  t.regex(
+    changelog,
+    new RegExp(
+      `First fix .* \\(\\[111\\]\\(https://github.com/owner/repo\\/commits\\/111\\)\\), closes \\[#123\\]\\(https://github.com/owner/repo\\/issues\\/123\\)`
+    )
+  );
   t.regex(changelog, /### Update/);
-  t.regex(changelog, /\* Second feature .*, closes #456/);
+  t.regex(
+    changelog,
+    new RegExp(
+      `Second feature .* \\(\\[222\\]\\(https://github.com/owner/repo\\/commits\\/222\\)\\), closes \\[#456\\]\\(https://github.com/owner/repo\\/issues\\/456\\)`
+    )
+  );
 });
 
 test.serial('Accept a "config" option', async t => {
-  await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
-  const changelog = await pify(releaseNotesGenerator)({config: 'conventional-changelog-eslint'});
+  const commits = [
+    {hash: '111', message: 'Fix: First fix (fixes #123)'},
+    {hash: '222', message: 'Update: Second feature (fixes #456)'},
+  ];
+  const changelog = await pify(releaseNotesGenerator)(
+    {config: 'conventional-changelog-eslint'},
+    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+  );
 
+  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
   t.regex(changelog, /### Fix/);
-  t.regex(changelog, /\* First fix .*, closes #123/);
+  t.regex(
+    changelog,
+    new RegExp(
+      `First fix .* \\(\\[111\\]\\(https://github.com/owner/repo\\/commits\\/111\\)\\), closes \\[#123\\]\\(https://github.com/owner/repo\\/issues\\/123\\)`
+    )
+  );
   t.regex(changelog, /### Update/);
-  t.regex(changelog, /\* Second feature .*, closes #456/);
+  t.regex(
+    changelog,
+    new RegExp(
+      `Second feature .* \\(\\[222\\]\\(https://github.com/owner/repo\\/commits\\/222\\)\\), closes \\[#456\\]\\(https://github.com/owner/repo\\/issues\\/456\\)`
+    )
+  );
 });
 
-test.serial('Accept an additionnal argument', async t => {
-  await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
-  const changelog = await pify(releaseNotesGenerator)({preset: 'eslint'}, {});
-
-  t.regex(changelog, /### Fix/);
-  t.regex(changelog, /\* First fix .*, closes #123/);
-  t.regex(changelog, /### Update/);
-  t.regex(changelog, /\* Second feature .*, closes #456/);
-});
-
-test.serial('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
-  const eslintChangelogConfig = await pify(require('conventional-changelog-eslint'))();
-
-  await commits(['##Fix## First fix (fixes #123)', '##Update## Second feature (fixes #456)']);
+test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
+  const commits = [
+    {hash: '111', message: '##Fix## First fix (fixes #123)'},
+    {hash: '222', message: '##Update## Second feature (fixes #456)'},
+  ];
   const changelog = await pify(releaseNotesGenerator)(
     {
       parserOpts: {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'message']},
-      writerOpts: eslintChangelogConfig.writerOpts,
+      writerOpts: (await pify(require('conventional-changelog-eslint'))()).writerOpts,
     },
-    {}
+    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
+  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
   t.regex(changelog, /### Fix/);
-  t.regex(changelog, /\* First fix .*, closes #123/);
+  t.regex(
+    changelog,
+    new RegExp(
+      `First fix .* \\(\\[111\\]\\(https://github.com/owner/repo\\/commits\\/111\\)\\), closes \\[#123\\]\\(https://github.com/owner/repo\\/issues\\/123\\)`
+    )
+  );
   t.regex(changelog, /### Update/);
-  t.regex(changelog, /\* Second feature .*, closes #456/);
+  t.regex(
+    changelog,
+    new RegExp(
+      `Second feature .* \\(\\[222\\]\\(https://github.com/owner/repo\\/commits\\/222\\)\\), closes \\[#456\\]\\(https://github.com/owner/repo\\/issues\\/456\\)`
+    )
+  );
 });
 
 test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', async t => {
-  await commits(['fix(scope1): 2 First fix (fixes #123)', 'fix(scope2): 1 Second fix (fixes #456)']);
+  const commits = [
+    {hash: '111', message: 'fix(scope1): 2 First fix (fixes #123)'},
+    {hash: '222', message: 'fix(scope2): 1 Second fix (fixes #456)'},
+  ];
   const changelog = await pify(releaseNotesGenerator)(
     {
       preset: 'angular',
       parserOpts: {headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/},
       writerOpts: {commitsSort: ['subject', 'scope']},
     },
-    {}
+    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
+  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
 });
 
-test.serial('Ignore malformatted commits and include valid ones', async t => {
-  await commits(['fix(scope1): First fix', 'Feature => Invalid message']);
-  const changelog = await pify(releaseNotesGenerator)({});
+test('Ignore malformatted commits and include valid ones', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'Feature => Invalid message'},
+  ];
+  const changelog = await pify(releaseNotesGenerator)(
+    {},
+    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+  );
 
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
@@ -93,50 +153,53 @@ test.serial('Ignore malformatted commits and include valid ones', async t => {
   t.notRegex(changelog, /Feature => Invalid message/);
 });
 
-test.serial('Throw "SemanticReleaseError" if "preset" doesn`t exist', async t => {
-  await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
+test('Throw error if "preset" doesn`t exist', async t => {
+  const commits = [
+    {hash: '111', message: 'Fix: First fix (fixes #123)'},
+    {hash: '222', message: 'Update: Second feature (fixes #456)'},
+  ];
   const error = await t.throws(
-    pify(releaseNotesGenerator)({preset: 'unknown-preset'}),
-    /Preset: "unknown-preset" does not exist:/
+    pify(releaseNotesGenerator)(
+      {preset: 'unknown-preset'},
+      {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    )
   );
 
-  t.true(error instanceof SemanticReleaseError);
   t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
-test.serial('Throw "SemanticReleaseError" if "config" doesn`t exist', async t => {
-  await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
+test('Throw error if "config" doesn`t exist', async t => {
+  const commits = [
+    {hash: '111', message: 'Fix: First fix (fixes #123)'},
+    {hash: '222', message: 'Update: Second feature (fixes #456)'},
+  ];
   const error = await t.throws(
-    pify(releaseNotesGenerator)({config: 'unknown-config'}),
-    /Config: "unknown-config" does not exist:/
+    pify(releaseNotesGenerator)(
+      {config: 'unknown-config'},
+      {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    )
   );
 
-  t.true(error instanceof SemanticReleaseError);
   t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
-test.serial('Handle error in "conventional-changelog" and wrap in "SemanticReleaseError"', async t => {
-  await commits(['Fix: First fix (fixes #123)', 'Update: Second feature (fixes #456)']);
+test('ReThrow error from "conventional-changelog"', async t => {
+  const commits = [
+    {hash: '111', message: 'Fix: First fix (fixes #123)'},
+    {hash: '222', message: 'Update: Second feature (fixes #456)'},
+  ];
   const error = await t.throws(
-    pify(releaseNotesGenerator)({
-      writerOpts: {
-        transform() {
-          throw new Error();
+    pify(releaseNotesGenerator)(
+      {
+        writerOpts: {
+          transform() {
+            throw new Error('Test error');
+          },
         },
       },
-    }),
-    /Error in conventional-changelog/
+      {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    )
   );
 
-  t.true(error instanceof SemanticReleaseError);
-});
-
-test.serial('Accept an undefined "pluginConfig"', async t => {
-  await commits(['fix(scope1): First fix', 'feat(scope2): Second feature']);
-  const changelog = await pify(releaseNotesGenerator)(undefined);
-
-  t.regex(changelog, /### Bug Fixes/);
-  t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
-  t.regex(changelog, /### Features/);
-  t.regex(changelog, /\* \*\*scope2:\*\* Second feature/);
+  t.is(error.message, 'Test error');
 });
