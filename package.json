@@ -25,8 +25,7 @@
     "hosted-git-info": "^2.5.0",
     "import-from": "^2.1.0",
     "into-stream": "^3.1.0",
-    "lodash": "^4.17.4",
-    "pify": "^3.0.0"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "ava": "^0.23.0",
