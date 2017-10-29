@@ -20,6 +20,7 @@
     "conventional-changelog-angular": "^1.4.0",
     "conventional-changelog-writer": "^2.0.1",
     "conventional-commits-parser": "^2.0.0",
+    "debug": "^3.1.0",
     "get-stream": "^3.0.0",
     "hosted-git-info": "^2.5.0",
     "import-from": "^2.1.0",
