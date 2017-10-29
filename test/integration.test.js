@@ -1,5 +1,5 @@
+import {promisify} from 'util';
 import test from 'ava';
-import pify from 'pify';
 import releaseNotesGenerator from '../lib/index';
 
 const url = 'https://github.com/owner/repo';
@@ -11,7 +11,7 @@ test('Use "conventional-changelog-angular" by default', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await pify(releaseNotesGenerator)(
+  const changelog = await promisify(releaseNotesGenerator)(
     {},
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -35,7 +35,7 @@ test('Accept a "preset" option', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const changelog = await pify(releaseNotesGenerator)(
+  const changelog = await promisify(releaseNotesGenerator)(
     {preset: 'eslint'},
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -63,7 +63,7 @@ test.serial('Accept a "config" option', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const changelog = await pify(releaseNotesGenerator)(
+  const changelog = await promisify(releaseNotesGenerator)(
     {config: 'conventional-changelog-eslint'},
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -91,10 +91,10 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
     {hash: '111', message: '##Fix## First fix (fixes #123)'},
     {hash: '222', message: '##Update## Second feature (fixes #456)'},
   ];
-  const changelog = await pify(releaseNotesGenerator)(
+  const changelog = await promisify(releaseNotesGenerator)(
     {
       parserOpts: {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'message']},
-      writerOpts: (await pify(require('conventional-changelog-eslint'))()).writerOpts,
+      writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
     },
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -122,7 +122,7 @@ test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', a
     {hash: '111', message: 'fix(scope1): 2 First fix (fixes #123)'},
     {hash: '222', message: 'fix(scope2): 1 Second fix (fixes #456)'},
   ];
-  const changelog = await pify(releaseNotesGenerator)(
+  const changelog = await promisify(releaseNotesGenerator)(
     {
       preset: 'angular',
       parserOpts: {headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/},
@@ -142,7 +142,7 @@ test('Ignore malformatted commits and include valid ones', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'Feature => Invalid message'},
   ];
-  const changelog = await pify(releaseNotesGenerator)(
+  const changelog = await promisify(releaseNotesGenerator)(
     {},
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -159,7 +159,7 @@ test('Throw error if "preset" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    pify(releaseNotesGenerator)(
+    promisify(releaseNotesGenerator)(
       {preset: 'unknown-preset'},
       {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
     )
@@ -174,7 +174,7 @@ test('Throw error if "config" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    pify(releaseNotesGenerator)(
+    promisify(releaseNotesGenerator)(
       {config: 'unknown-config'},
       {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
     )
@@ -189,7 +189,7 @@ test('ReThrow error from "conventional-changelog"', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    pify(releaseNotesGenerator)(
+    promisify(releaseNotesGenerator)(
       {
         writerOpts: {
           transform() {
