@@ -48,7 +48,7 @@
     "nyc": "^11.1.0",
     "prettier": "^1.7.2",
     "rimraf": "^2.6.1",
-    "semantic-release": "^8.0.0"
+    "semantic-release": "^9.1.0"
   },
   "engines": {
     "node": ">=4"
@@ -116,7 +116,7 @@
     "codecov": "codecov -f coverage/coverage-final.json",
     "lint": "eslint lib test",
     "pretest": "npm run clean && npm run lint",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release",
     "test": "nyc ava -v"
   }
 }
