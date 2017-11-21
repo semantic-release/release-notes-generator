@@ -3,8 +3,8 @@ import test from 'ava';
 import releaseNotesGenerator from '../lib/index';
 
 const url = 'https://github.com/owner/repo';
-const lastRelease = {gitHead: '123'};
-const nextRelease = {gitHead: '456', version: '1.0.0'};
+const lastRelease = {gitTag: 'v1.0.0'};
+const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
 
 test('Use "conventional-changelog-angular" by default', async t => {
   const commits = [
@@ -16,8 +16,8 @@ test('Use "conventional-changelog-angular" by default', async t => {
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
-  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(
     changelog,
@@ -40,8 +40,8 @@ test('Accept a "preset" option', async t => {
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
-  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
   t.regex(changelog, /### Fix/);
   t.regex(
     changelog,
@@ -58,7 +58,7 @@ test('Accept a "preset" option', async t => {
   );
 });
 
-test.serial('Accept a "config" option', async t => {
+test('Accept a "config" option', async t => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
@@ -68,8 +68,8 @@ test.serial('Accept a "config" option', async t => {
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
-  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
   t.regex(changelog, /### Fix/);
   t.regex(
     changelog,
@@ -88,19 +88,19 @@ test.serial('Accept a "config" option', async t => {
 
 test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
   const commits = [
-    {hash: '111', message: '##Fix## First fix (fixes #123)'},
-    {hash: '222', message: '##Update## Second feature (fixes #456)'},
+    {hash: '111', message: '%%Fix%% First fix (fixes #123)'},
+    {hash: '222', message: '%%Update%% Second feature (fixes #456)'},
   ];
   const changelog = await promisify(releaseNotesGenerator)(
     {
-      parserOpts: {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'message']},
+      parserOpts: {headerPattern: /^%%(.*?)%% (.*)$/, headerCorrespondence: ['tag', 'message']},
       writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
     },
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
-  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
   t.regex(changelog, /### Fix/);
   t.regex(
     changelog,
@@ -117,7 +117,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
   );
 });
 
-test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', async t => {
+test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): 2 First fix (fixes #123)'},
     {hash: '222', message: 'fix(scope2): 1 Second fix (fixes #456)'},
@@ -131,10 +131,39 @@ test.serial('Accept a partial "parseOpts" and "writerOpts" objects as option', a
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(`<a name="1.0.0"></a>`));
-  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/123\\.\\.\\.456\\)`));
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
+});
+
+test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await promisify(releaseNotesGenerator)(
+    {},
+    {
+      pkg: {repository: {url}},
+      lastRelease: {gitHead: 'abc'},
+      nextRelease: {gitHead: 'def', version: '2.0.0'},
+      commits,
+    }
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/abc\\.\\.\\.def\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(https://github.com/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(https://github.com/owner/repo\\/commits\\/222\\)\\)`)
+  );
 });
 
 test('Ignore malformatted commits and include valid ones', async t => {
