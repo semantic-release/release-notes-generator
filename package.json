@@ -2,12 +2,7 @@
   "name": "@semantic-release/release-notes-generator",
   "description": "Customizable release-notes-generator plugin for semantic-release",
   "version": "0.0.0-development",
-  "author": "Pierre Vanduynslager",
-  "authors": [
-    "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
-    "Gregor Martynus (https://twitter.com/gr2m)",
-    "Pierre Vanduynslager (https://twitter.com/PierreAtHome)"
-  ],
+  "author": "Pierre Vanduynslager (https://twitter.com/@pvdlg_)",
   "bugs": {
     "url": "https://github.com/semantic-release/release-notes-generator/issues"
   },
@@ -16,6 +11,10 @@
       "path": "cz-conventional-changelog"
     }
   },
+  "contributors": [
+    "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
+    "Gregor Martynus (https://twitter.com/gr2m)"
+  ],
   "dependencies": {
     "conventional-changelog-angular": "^1.4.0",
     "conventional-changelog-writer": "^2.0.1",
