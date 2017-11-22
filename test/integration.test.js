@@ -1,6 +1,6 @@
 import {promisify} from 'util';
 import test from 'ava';
-import releaseNotesGenerator from '../lib/index';
+import releaseNotesGenerator from '..';
 
 const url = 'https://github.com/owner/repo';
 const lastRelease = {gitTag: 'v1.0.0'};
