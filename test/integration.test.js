@@ -2,7 +2,7 @@ import {promisify} from 'util';
 import test from 'ava';
 import releaseNotesGenerator from '..';
 
-const url = 'https://github.com/owner/repo';
+const url = 'https://github.com/owner/repo.git';
 const lastRelease = {gitTag: 'v1.0.0'};
 const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
 
@@ -163,6 +163,54 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
   t.regex(
     changelog,
     new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(https://github.com/owner/repo\\/commits\\/222\\)\\)`)
+  );
+});
+
+test('Accept a custom repository URL', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await promisify(releaseNotesGenerator)(
+    {},
+    {pkg: {repository: {url: 'http://domain.com:90/owner/repo'}}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(http://domain.com:90/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(http://domain.com:90/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(http://domain.com:90/owner/repo\\/commits\\/222\\)\\)`)
+  );
+});
+
+test('Accept a custom repository URL with git format', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await promisify(releaseNotesGenerator)(
+    {},
+    {pkg: {repository: {url: 'git@domain.com:owner/repo.git'}}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://domain.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(https://domain.com/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(https://domain.com/owner/repo\\/commits\\/222\\)\\)`)
   );
 });
 
