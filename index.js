@@ -6,7 +6,7 @@ const hostedGitInfo = require('hosted-git-info');
 const conventionalCommitsParser = require('conventional-commits-parser').sync;
 const conventionalChangelogWriter = require('conventional-changelog-writer');
 const debug = require('debug')('semantic-release:release-notes-generator');
-const loadChangelogConfig = require('./load/changelog-config');
+const loadChangelogConfig = require('./lib/load-changelog-config');
 
 /**
  * Generate the changelog for all the commits since the last release.
