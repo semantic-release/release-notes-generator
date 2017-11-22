@@ -2,7 +2,7 @@ const {callbackify} = require('util');
 const url = require('url');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
-const hostedGitInfo = require('hosted-git-info');
+const gitUrlParse = require('git-url-parse');
 const conventionalCommitsParser = require('conventional-commits-parser').sync;
 const conventionalChangelogWriter = require('conventional-changelog-writer');
 const debug = require('debug')('semantic-release:release-notes-generator');
@@ -27,12 +27,13 @@ async function releaseNotesGenerator(pluginConfig, {pkg, commits, lastRelease, n
   commits = commits.map(rawCommit =>
     Object.assign(rawCommit, conventionalCommitsParser(rawCommit.message, parserOpts))
   );
-  const {default: protocol, domain: host, project: repository, user: owner} = hostedGitInfo.fromUrl(pkg.repository.url);
+  const {resource: hostname, port, name: repository, owner} = gitUrlParse(pkg.repository.url);
+  const protocol = url.parse(pkg.repository.url).protocol || 'https';
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const context = {
     version: nextRelease.version,
-    host: url.format({protocol, host}),
+    host: url.format({protocol, hostname, port}),
     owner,
     repository,
     previousTag,
@@ -42,7 +43,7 @@ async function releaseNotesGenerator(pluginConfig, {pkg, commits, lastRelease, n
   };
 
   debug('version: %o', nextRelease.version);
-  debug('host: %o', host);
+  debug('host: %o', hostname);
   debug('owner: %o', owner);
   debug('repository: %o', repository);
   debug('previousTag: %o', previousTag);
