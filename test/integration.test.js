@@ -2,7 +2,7 @@ import {promisify} from 'util';
 import test from 'ava';
 import releaseNotesGenerator from '..';
 
-const url = 'https://github.com/owner/repo';
+const repositoryUrl = 'https://github.com/owner/repo';
 const lastRelease = {gitTag: 'v1.0.0'};
 const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
 
@@ -11,7 +11,7 @@ test('Use "conventional-changelog-angular" by default', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator({}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits});
+  const changelog = await releaseNotesGenerator({}, {options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
   t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
@@ -34,7 +34,7 @@ test('Accept a "preset" option', async t => {
   ];
   const changelog = await releaseNotesGenerator(
     {preset: 'eslint'},
-    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
@@ -62,7 +62,7 @@ test('Accept a "config" option', async t => {
   ];
   const changelog = await releaseNotesGenerator(
     {config: 'conventional-changelog-eslint'},
-    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
@@ -93,7 +93,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
       parserOpts: {headerPattern: /^%%(.*?)%% (.*)$/, headerCorrespondence: ['tag', 'message']},
       writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
     },
-    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
@@ -125,7 +125,7 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
       parserOpts: {headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/},
       writerOpts: {commitsSort: ['subject', 'scope']},
     },
-    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+    {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
@@ -141,12 +141,7 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
   ];
   const changelog = await releaseNotesGenerator(
     {},
-    {
-      pkg: {repository: {url}},
-      lastRelease: {gitHead: 'abc'},
-      nextRelease: {gitHead: 'def', version: '2.0.0'},
-      commits,
-    }
+    {options: {repositoryUrl}, lastRelease: {gitHead: 'abc'}, nextRelease: {gitHead: 'def', version: '2.0.0'}, commits}
   );
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
@@ -163,12 +158,60 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
   );
 });
 
+test('Accept a custom repository URL', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await releaseNotesGenerator(
+    {},
+    {options: {repositoryUrl: 'http://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(http://domain.com:90/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(http://domain.com:90/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(http://domain.com:90/owner/repo\\/commits\\/222\\)\\)`)
+  );
+});
+
+test('Accept a custom repository URL with git format', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await releaseNotesGenerator(
+    {},
+    {options: {repositoryUrl: 'git@domain.com:owner/repo.git'}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://domain.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(https://domain.com/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(https://domain.com/owner/repo\\/commits\\/222\\)\\)`)
+  );
+});
+
 test('Ignore malformatted commits and include valid ones', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'Feature => Invalid message'},
   ];
-  const changelog = await releaseNotesGenerator({}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits});
+  const changelog = await releaseNotesGenerator({}, {options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
@@ -182,7 +225,7 @@ test('Throw error if "preset" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    releaseNotesGenerator({preset: 'unknown-preset'}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits})
+    releaseNotesGenerator({preset: 'unknown-preset'}, {options: {repositoryUrl}, lastRelease, nextRelease, commits})
   );
 
   t.is(error.code, 'MODULE_NOT_FOUND');
@@ -194,7 +237,7 @@ test('Throw error if "config" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    releaseNotesGenerator({config: 'unknown-config'}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits})
+    releaseNotesGenerator({config: 'unknown-config'}, {options: {repositoryUrl}, lastRelease, nextRelease, commits})
   );
 
   t.is(error.code, 'MODULE_NOT_FOUND');
@@ -214,7 +257,7 @@ test('ReThrow error from "conventional-changelog"', async t => {
           },
         },
       },
-      {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
+      {options: {repositoryUrl}, lastRelease, nextRelease, commits}
     )
   );
 
