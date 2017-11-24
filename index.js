@@ -1,4 +1,3 @@
-const {callbackify} = require('util');
 const url = require('url');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
@@ -51,4 +50,4 @@ async function releaseNotesGenerator(pluginConfig, {pkg, commits, lastRelease, n
   return getStream(intoStream.obj(commits).pipe(conventionalChangelogWriter(context, writerOpts)));
 }
 
-module.exports = callbackify(releaseNotesGenerator);
+module.exports = releaseNotesGenerator;
