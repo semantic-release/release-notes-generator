@@ -11,10 +11,7 @@ test('Use "conventional-changelog-angular" by default', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
-    {},
-    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
-  );
+  const changelog = await releaseNotesGenerator({}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
   t.regex(changelog, new RegExp(`\\(https://github.com/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
@@ -35,7 +32,7 @@ test('Accept a "preset" option', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
+  const changelog = await releaseNotesGenerator(
     {preset: 'eslint'},
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -63,7 +60,7 @@ test('Accept a "config" option', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
+  const changelog = await releaseNotesGenerator(
     {config: 'conventional-changelog-eslint'},
     {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
   );
@@ -91,7 +88,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
     {hash: '111', message: '%%Fix%% First fix (fixes #123)'},
     {hash: '222', message: '%%Update%% Second feature (fixes #456)'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
+  const changelog = await releaseNotesGenerator(
     {
       parserOpts: {headerPattern: /^%%(.*?)%% (.*)$/, headerCorrespondence: ['tag', 'message']},
       writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
@@ -122,7 +119,7 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
     {hash: '111', message: 'fix(scope1): 2 First fix (fixes #123)'},
     {hash: '222', message: 'fix(scope2): 1 Second fix (fixes #456)'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
+  const changelog = await releaseNotesGenerator(
     {
       preset: 'angular',
       parserOpts: {headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/},
@@ -142,7 +139,7 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
+  const changelog = await releaseNotesGenerator(
     {},
     {
       pkg: {repository: {url}},
@@ -171,10 +168,7 @@ test('Ignore malformatted commits and include valid ones', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'Feature => Invalid message'},
   ];
-  const changelog = await promisify(releaseNotesGenerator)(
-    {},
-    {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
-  );
+  const changelog = await releaseNotesGenerator({}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
@@ -188,10 +182,7 @@ test('Throw error if "preset" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    promisify(releaseNotesGenerator)(
-      {preset: 'unknown-preset'},
-      {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
-    )
+    releaseNotesGenerator({preset: 'unknown-preset'}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits})
   );
 
   t.is(error.code, 'MODULE_NOT_FOUND');
@@ -203,10 +194,7 @@ test('Throw error if "config" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    promisify(releaseNotesGenerator)(
-      {config: 'unknown-config'},
-      {pkg: {repository: {url}}, lastRelease, nextRelease, commits}
-    )
+    releaseNotesGenerator({config: 'unknown-config'}, {pkg: {repository: {url}}, lastRelease, nextRelease, commits})
   );
 
   t.is(error.code, 'MODULE_NOT_FOUND');
@@ -218,7 +206,7 @@ test('ReThrow error from "conventional-changelog"', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    promisify(releaseNotesGenerator)(
+    releaseNotesGenerator(
       {
         writerOpts: {
           transform() {
