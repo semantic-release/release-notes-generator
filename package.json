@@ -40,7 +40,7 @@
     "eslint-plugin-prettier": "^2.3.0",
     "nyc": "^11.1.0",
     "prettier": "~1.8.2",
-    "semantic-release": "^9.1.0",
+    "semantic-release": "^10.0.0",
     "xo": "^0.18.2"
   },
   "engines": {
@@ -83,11 +83,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "generateNotes": {
-      "path": "./index.js"
-    }
   },
   "repository": {
     "type": "git",
