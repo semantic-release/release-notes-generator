@@ -206,6 +206,54 @@ test('Accept a custom repository URL with git format', async t => {
   );
 });
 
+test('Accept a custom repository URL with git+http format', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await releaseNotesGenerator(
+    {},
+    {options: {repositoryUrl: 'git+http://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(http://domain.com:90/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(http://domain.com:90/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(http://domain.com:90/owner/repo\\/commits\\/222\\)\\)`)
+  );
+});
+
+test('Accept a custom repository URL with git+https format', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await releaseNotesGenerator(
+    {},
+    {options: {repositoryUrl: 'git+https://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(`<a name="2.0.0"></a>`));
+  t.regex(changelog, new RegExp(`\\(https://domain.com:90/owner/repo/compare/v1\\.0\\.0\\.\\.\\.v2\\.0\\.0\\)`));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(`scope1:.*First fix \\(\\[111\\]\\(https://domain.com:90/owner/repo\\/commits\\/111\\)\\)`)
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(`scope2:.*Second feature \\(\\[222\\]\\(https://domain.com:90/owner/repo\\/commits\\/222\\)\\)`)
+  );
+});
+
 test('Ignore malformatted commits and include valid ones', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},

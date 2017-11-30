@@ -26,8 +26,9 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
   commits = commits.map(rawCommit =>
     Object.assign(rawCommit, conventionalCommitsParser(rawCommit.message, parserOpts))
   );
-  const {resource: hostname, port, name: repository, owner} = gitUrlParse(repositoryUrl);
-  const protocol = url.parse(repositoryUrl).protocol || 'https';
+  const {resource: hostname, port, name: repository, owner, protocols} = gitUrlParse(repositoryUrl);
+  const protocol = protocols.includes('https') ? 'https' : protocols.includes('http') ? 'http' : 'https';
+
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const context = {
