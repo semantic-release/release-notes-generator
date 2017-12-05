@@ -25,11 +25,16 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  */
 async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRelease, options: {repositoryUrl}}) {
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig);
-  commits = commits.map(rawCommit =>
-    Object.assign(rawCommit, conventionalCommitsParser(rawCommit.message, parserOpts))
-  );
+
   const {resource: hostname, port, name: repository, owner, protocols} = gitUrlParse(repositoryUrl);
   const protocol = protocols.includes('https') ? 'https' : protocols.includes('http') ? 'http' : 'https';
+
+  const {issue, commit, referenceActions, issuePrefixes} =
+    find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
+  const parsedCommits = commits.map(rawCommit => ({
+    ...rawCommit,
+    ...conventionalCommitsParser(rawCommit.message, {...parserOpts, referenceActions, issuePrefixes}),
+  }));
 
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
@@ -41,7 +46,8 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
     previousTag,
     currentTag,
     linkCompare: currentTag && previousTag,
-    ...(find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default),
+    issue,
+    commit,
   };
 
   debug('version: %o', nextRelease.version);
@@ -51,7 +57,7 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
   debug('previousTag: %o', previousTag);
   debug('currentTag: %o', currentTag);
 
-  return getStream(intoStream.obj(commits).pipe(conventionalChangelogWriter(context, writerOpts)));
+  return getStream(intoStream.obj(parsedCommits).pipe(conventionalChangelogWriter(context, writerOpts)));
 }
 
 module.exports = releaseNotesGenerator;
