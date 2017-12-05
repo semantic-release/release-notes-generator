@@ -1,4 +1,5 @@
 const url = require('url');
+const {find} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
 const gitUrlParse = require('git-url-parse');
@@ -6,6 +7,7 @@ const conventionalCommitsParser = require('conventional-commits-parser').sync;
 const conventionalChangelogWriter = require('conventional-changelog-writer');
 const debug = require('debug')('semantic-release:release-notes-generator');
 const loadChangelogConfig = require('./lib/load-changelog-config');
+const HOSTS_CONFIG = require('./lib/hosts-config');
 
 /**
  * Generate the changelog for all the commits since the last release.
@@ -39,6 +41,7 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
     previousTag,
     currentTag,
     linkCompare: currentTag && previousTag,
+    ...(find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default),
   };
 
   debug('version: %o', nextRelease.version);
