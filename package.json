@@ -21,7 +21,7 @@
     "conventional-commits-parser": "^2.0.0",
     "debug": "^3.1.0",
     "get-stream": "^3.0.0",
-    "git-url-parse": "^7.0.1",
+    "git-url-parse": "^8.0.0",
     "import-from": "^2.1.0",
     "into-stream": "^3.1.0",
     "lodash": "^4.17.4"
