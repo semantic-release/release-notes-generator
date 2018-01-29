@@ -42,7 +42,7 @@ test('Accept a "preset" option', async t => {
     changelog,
     new RegExp(
       escape(
-        '* First fix  ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)'
+        '* First fix (fixes #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)'
       )
     )
   );
@@ -51,7 +51,7 @@ test('Accept a "preset" option', async t => {
     changelog,
     new RegExp(
       escape(
-        '* Second feature  ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)'
+        '* Second feature (fixes #456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)'
       )
     )
   );
@@ -74,7 +74,7 @@ test('Accept a "config" option', async t => {
     changelog,
     new RegExp(
       escape(
-        '* First fix  ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)'
+        '* First fix (fixes #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)'
       )
     )
   );
@@ -83,7 +83,7 @@ test('Accept a "config" option', async t => {
     changelog,
     new RegExp(
       escape(
-        '* Second feature  ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)'
+        '* Second feature (fixes #456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)'
       )
     )
   );
