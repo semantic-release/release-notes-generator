@@ -10,7 +10,7 @@ Customizable release-notes-generator plugin for [semantic-release](https://githu
 
 By default `release-notes-generator` uses the `angular` format described in [Angular convention](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/convention.md).
 
-Additionnal options can be set within the plugin definition in `package.json` to use a different commit format and to customize it:
+Additional options can be set within the plugin definition in `package.json` to use a different commit format and to customize it:
 
 ```json
 {
@@ -34,7 +34,6 @@ Additionnal options can be set within the plugin definition in `package.json` to
 | `config`     | NPM package name of a custom [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog) preset.                                                                                                                                                                    | -         |
 | `parserOpts` | Additional [conventional-commits-parser](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-commits-parser#conventionalcommitsparseroptions) options that will extends ones loaded by `preset` or `config`. See [Parser options](#parser-options). | -         |
 | `writerOpts` | Additional [conventional-commits-writer](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#options) options that will extends ones loaded by `preset` or `config`. See [Writer options](#writer-options).                        | -         |
-
 
 **NOTE:** `options.config` will be overwritten by the values of preset. You should use either `preset` or `config`, but not both. Individual properties of `parserOpts` and `writerOpts` will overwrite ones loaded with `preset` or `config`.
 
@@ -61,7 +60,6 @@ The following example uses [Angular convention](https://github.com/conventional-
 
 Allow to overwrite specific [conventional-commits-writer](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#options) options. This is convenient to use a [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog) preset with some customizations without having to create a new module.
 
-
 The following example uses [Angular convention](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/convention.md) but will sort the commits in the changelog by `subject` then `scope`. By default the [preset](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/index.js#L90) sort the commits in the changelog by `scope` then `subject`.
 
 ```json
@@ -76,3 +74,7 @@ The following example uses [Angular convention](https://github.com/conventional-
   }
 }
 ```
+
+## Usage
+
+The plugin is used by default by [semantic-release](https://github.com/semantic-release/semantic-release) so installing it is not necessary and all configuration are optionals.
