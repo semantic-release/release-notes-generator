@@ -6,6 +6,9 @@ Customizable release-notes-generator plugin for [semantic-release](https://githu
 [![Codecov](https://img.shields.io/codecov/c/github/semantic-release/release-notes-generator.svg)](https://codecov.io/gh/semantic-release/release-notes-generator)
 [![Greenkeeper badge](https://badges.greenkeeper.io/semantic-release/release-notes-generator.svg)](https://greenkeeper.io/)
 
+[![npm latest version](https://img.shields.io/npm/v/@semantic-release/release-notes-generator/latest.svg)](https://www.npmjs.com/package/@semantic-release/release-notes-generator)
+[![npm next version](https://img.shields.io/npm/v/@semantic-release/release-notes-generator/next.svg)](https://www.npmjs.com/package/@semantic-release/release-notes-generator)
+
 ## Options
 
 By default `release-notes-generator` uses the `angular` format described in [Angular convention](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/convention.md).
