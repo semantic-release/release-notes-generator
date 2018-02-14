@@ -132,7 +132,7 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
   const changelog = await releaseNotesGenerator(
     {
       preset: 'angular',
-      parserOpts: {headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/},
+      parserOpts: {headerPattern: /^(\w*)(?:\((.*)\)): (.*)$/},
       writerOpts: {commitsSort: ['subject', 'scope']},
     },
     {options: {repositoryUrl}, lastRelease, nextRelease, commits}
