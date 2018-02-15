@@ -37,10 +37,7 @@
     "conventional-changelog-jshint": "^0.3.0",
     "cz-conventional-changelog": "^2.0.0",
     "escape-string-regexp": "^1.0.5",
-    "eslint-config-prettier": "^2.3.0",
-    "eslint-plugin-prettier": "^2.3.0",
     "nyc": "^11.1.0",
-    "prettier": "~1.10.0",
     "semantic-release": "^12.2.2",
     "xo": "^0.20.0"
   },
@@ -77,10 +74,7 @@
     "all": true
   },
   "prettier": {
-    "printWidth": 120,
-    "singleQuote": true,
-    "bracketSpacing": false,
-    "trailingComma": "es5"
+    "printWidth": 120
   },
   "publishConfig": {
     "access": "public",
@@ -99,14 +93,7 @@
     "test": "nyc ava -v"
   },
   "xo": {
-    "extends": [
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": 2
-    }
+    "prettier": true,
+    "space": true
   }
 }
