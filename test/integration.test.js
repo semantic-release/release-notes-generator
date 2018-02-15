@@ -91,12 +91,17 @@ test('Accept a "config" option', async t => {
 
 test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
   const commits = [
-    {hash: '111', message: '%%Fix%% First fix (fixes #123)'},
-    {hash: '222', message: '%%Update%% Second feature (fixes #456)'},
+    {hash: '111', message: '%%Fix%% First fix (keyword #123)'},
+    {hash: '222', message: '%%Update%% Second feature (keyword JIRA-456)'},
   ];
   const changelog = await releaseNotesGenerator(
     {
-      parserOpts: {headerPattern: /^%%(.*?)%% (.*)$/, headerCorrespondence: ['tag', 'message']},
+      parserOpts: {
+        headerPattern: /^%%(.*?)%% (.*)$/,
+        headerCorrespondence: ['tag', 'message'],
+        referenceActions: ['keyword'],
+        issuePrefixes: ['#', 'JIRA-'],
+      },
       writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
     },
     {options: {repositoryUrl}, lastRelease, nextRelease, commits}
@@ -109,7 +114,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
     changelog,
     new RegExp(
       escape(
-        '* First fix (fixes #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)'
+        '* First fix (keyword #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)'
       )
     )
   );
@@ -118,7 +123,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
     changelog,
     new RegExp(
       escape(
-        '* Second feature (fixes #456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)'
+        '* Second feature (keyword JIRA-456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)'
       )
     )
   );
