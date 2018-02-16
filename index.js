@@ -33,9 +33,8 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
     find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
   const parsedCommits = commits.map(rawCommit => ({
     ...rawCommit,
-    ...conventionalCommitsParser(rawCommit.message, {...parserOpts, referenceActions, issuePrefixes}),
+    ...conventionalCommitsParser(rawCommit.message, {referenceActions, issuePrefixes, ...parserOpts}),
   }));
-
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const context = {
