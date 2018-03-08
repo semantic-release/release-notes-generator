@@ -38,7 +38,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "escape-string-regexp": "^1.0.5",
     "nyc": "^11.1.0",
-    "semantic-release": "^12.2.2",
+    "semantic-release": "^15.0.0",
     "xo": "^0.20.0"
   },
   "engines": {
