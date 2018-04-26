@@ -11,7 +11,7 @@ Customizable release-notes-generator plugin for [semantic-release](https://githu
 
 ## Options
 
-By default `release-notes-generator` uses the `angular` format described in [Angular convention](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/convention.md).
+By default `release-notes-generator` uses the `angular` format described in [Angular convention](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular).
 
 Additional options can be set within the plugin definition in `package.json` to use a different commit format and to customize it:
 
