@@ -1,5 +1,5 @@
 import test from 'ava';
-import loadChangelogConfig from './../lib/load-changelog-config';
+import loadChangelogConfig from '../lib/load-changelog-config';
 
 /**
  * AVA macro to verify that `loadChangelogConfig` return a config object with parserOpts and writerOpts.

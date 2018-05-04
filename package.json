@@ -39,7 +39,7 @@
     "escape-string-regexp": "^1.0.5",
     "nyc": "^11.1.0",
     "semantic-release": "^15.0.0",
-    "xo": "^0.20.0"
+    "xo": "^0.21.0"
   },
   "engines": {
     "node": ">=8.3"
@@ -74,7 +74,8 @@
     "all": true
   },
   "prettier": {
-    "printWidth": 120
+    "printWidth": 120,
+    "trailingComma": "es5"
   },
   "publishConfig": {
     "access": "public",
