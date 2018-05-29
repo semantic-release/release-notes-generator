@@ -14,7 +14,6 @@ test('Use "conventional-changelog-angular" by default', async t => {
   ];
   const changelog = await releaseNotesGenerator({}, {options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](https://github.com/owner/repo/commit/111))')));
@@ -35,7 +34,6 @@ test('Accept a "preset" option', async t => {
     {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Fix/);
   t.regex(
@@ -67,7 +65,6 @@ test('Accept a "config" option', async t => {
     {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Fix/);
   t.regex(
@@ -107,7 +104,6 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
     {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Fix/);
   t.regex(
@@ -143,7 +139,6 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
     {options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
@@ -159,7 +154,6 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
     {options: {repositoryUrl}, lastRelease: {gitHead: 'abc'}, nextRelease: {gitHead: 'def', version: '2.0.0'}, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/abc...def)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](https://github.com/owner/repo/commit/111))')));
@@ -180,7 +174,6 @@ test('Accept a custom repository URL', async t => {
     {options: {repositoryUrl: 'http://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(http://domain.com:90/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](http://domain.com:90/owner/repo/commit/111))')));
@@ -201,7 +194,6 @@ test('Accept a custom repository URL with git format', async t => {
     {options: {repositoryUrl: 'git@domain.com:owner/repo.git'}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://domain.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](https://domain.com/owner/repo/commit/111))')));
@@ -222,7 +214,6 @@ test('Accept a custom repository URL with git+http format', async t => {
     {options: {repositoryUrl: 'git+http://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(http://domain.com:90/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](http://domain.com:90/owner/repo/commit/111))')));
@@ -243,7 +234,6 @@ test('Accept a custom repository URL with git+https format', async t => {
     {options: {repositoryUrl: 'git+https://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://domain.com:90/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(
@@ -271,7 +261,6 @@ test('Accept a Bitbucket repository URL', async t => {
     {options: {repositoryUrl: 'git+https://bitbucket.org/owner/repo'}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://bitbucket.org/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(
@@ -299,7 +288,6 @@ test('Accept a Gitlab repository URL', async t => {
     {options: {repositoryUrl: 'git+https://gitlab.com/owner/repo'}, lastRelease, nextRelease, commits}
   );
 
-  t.regex(changelog, new RegExp(escape('<a name="2.0.0"></a>')));
   t.regex(changelog, new RegExp(escape('(https://gitlab.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(
