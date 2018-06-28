@@ -26,6 +26,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  * @returns {String} the changelog for all the commits in `options.commits`.
  */
 async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRelease, options: {repositoryUrl}}) {
+  repositoryUrl = pluginConfig.repositoryUrl || repositoryUrl;
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig);
 
   const {resource: hostname, port, name: repository, owner, protocols} = gitUrlParse(repositoryUrl);

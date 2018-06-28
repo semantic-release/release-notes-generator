@@ -86,6 +86,26 @@ test('Accept a "config" option', async t => {
   );
 });
 
+test('Accept a "repositoryUrl" option', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await releaseNotesGenerator(
+    {repositoryUrl: 'http://domain.com:90/owner/repo'},
+    {options: {}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(escape('(http://domain.com:90/owner/repo/compare/v1.0.0...v2.0.0)')));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](http://domain.com:90/owner/repo/commit/111))')));
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(escape('* **scope2:** Second feature ([222](http://domain.com:90/owner/repo/commit/222))'))
+  );
+});
+
 test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
   const commits = [
     {hash: '111', message: '%%Fix%% First fix (keyword #123)'},
