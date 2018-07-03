@@ -38,7 +38,9 @@ Additional options can be set within the plugin definition in `package.json` to 
 | `parserOpts` | Additional [conventional-commits-parser](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-commits-parser#conventionalcommitsparseroptions) options that will extends ones loaded by `preset` or `config`. See [Parser options](#parser-options). | -         |
 | `writerOpts` | Additional [conventional-commits-writer](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#options) options that will extends ones loaded by `preset` or `config`. See [Writer options](#writer-options).                        | -         |
 
-**NOTE:** `options.config` will be overwritten by the values of preset. You should use either `preset` or `config`, but not both. Individual properties of `parserOpts` and `writerOpts` will overwrite ones loaded with `preset` or `config`.
+**Note**: `config` will be overwritten by the values of `preset`. You should use either `preset` or `config`, but not both.
+
+**Note**: Individual properties of `parserOpts` and `writerOpts` will override ones loaded with an explicitly set `preset` or `config`. If `preset` or `config` are not set, only the properties set in `parserOpts` and `writerOpts` will be used.
 
 ### Parser Options
 
