@@ -318,6 +318,21 @@ test('Ignore malformatted commits and include valid ones', async t => {
   t.notRegex(changelog, /Feature => Invalid message/);
 });
 
+test('Exclude commits if they have a matching revert commits', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): First feature'},
+    {hash: '333', message: 'revert: feat(scope2): First feature\n\nThis reverts commit 222.\n'},
+  ];
+  const changelog = await releaseNotesGenerator({}, {options: {repositoryUrl}, lastRelease, nextRelease, commits});
+
+  t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](https://github.com/owner/repo/commit/111))')));
+  t.notRegex(changelog, /### Features/);
+  t.notRegex(changelog, /Second feature/);
+});
+
 test('Throw error if "preset" doesn`t exist', async t => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},

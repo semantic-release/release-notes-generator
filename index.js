@@ -3,8 +3,9 @@ const {find} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
 const gitUrlParse = require('git-url-parse');
-const conventionalCommitsParser = require('conventional-commits-parser').sync;
-const conventionalChangelogWriter = require('conventional-changelog-writer');
+const parser = require('conventional-commits-parser').sync;
+const writer = require('conventional-changelog-writer');
+const filter = require('conventional-commits-filter');
 const debug = require('debug')('semantic-release:release-notes-generator');
 const loadChangelogConfig = require('./lib/load-changelog-config');
 const HOSTS_CONFIG = require('./lib/hosts-config');
@@ -33,10 +34,12 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
 
   const {issue, commit, referenceActions, issuePrefixes} =
     find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
-  const parsedCommits = commits.map(rawCommit => ({
-    ...rawCommit,
-    ...conventionalCommitsParser(rawCommit.message, {referenceActions, issuePrefixes, ...parserOpts}),
-  }));
+  const parsedCommits = filter(
+    commits.map(rawCommit => ({
+      ...rawCommit,
+      ...parser(rawCommit.message, {referenceActions, issuePrefixes, ...parserOpts}),
+    }))
+  );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const context = {
@@ -58,7 +61,7 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
   debug('previousTag: %o', previousTag);
   debug('currentTag: %o', currentTag);
 
-  return getStream(intoStream.obj(parsedCommits).pipe(conventionalChangelogWriter(context, writerOpts)));
+  return getStream(intoStream.obj(parsedCommits).pipe(writer(context, writerOpts)));
 }
 
 module.exports = releaseNotesGenerator;
