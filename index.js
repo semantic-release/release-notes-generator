@@ -13,21 +13,27 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
 /**
  * Generate the changelog for all the commits in `options.commits`.
  *
- * @param {Object} [pluginConfig={}] semantic-release configuration.
+ * @param {Object} pluginConfig The plugin configuration.
  * @param {String} pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint').
- * @param {String} pluginConfig.config requierable npm package with a custom conventional-changelog preset
- * @param {Object} pluginConfig.parserOpts additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
- * @param {Object} pluginConfig.writerOpts additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
- * @param {Object} options semantic-release options.
- * @param {Array<Object>} options.commits array of commits, each containing `hash` and `message`.
- * @param {Object} options.lastRelease last release with `gitHead` corresponding to the commit hash used to make the last release and `gitTag` corresponding to the git tag associated with `gitHead`.
- * @param {Object} options.nextRelease next release with `gitHead` corresponding to the commit hash used to make the  release, the release `version` and `gitTag` corresponding to the git tag associated with `gitHead`.
- * @param {Object} options.options.repositoryUrl git repository URL.
+ * @param {String} pluginConfig.config Requierable npm package with a custom conventional-changelog preset
+ * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
+ * @param {Object} pluginConfig.writerOpts Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
+ * @param {Object} context The semantic-release context.
+ * @param {Array<Object>} context.commits The commits to analyze.
+ * @param {Object} context.lastRelease The last release with `gitHead` corresponding to the commit hash used to make the last release and `gitTag` corresponding to the git tag associated with `gitHead`.
+ * @param {Object} context.nextRelease The next release with `gitHead` corresponding to the commit hash used to make the  release, the release `version` and `gitTag` corresponding to the git tag associated with `gitHead`.
+ * @param {Object} context.options.repositoryUrl The git repository URL.
  *
- * @returns {String} the changelog for all the commits in `options.commits`.
+ * @returns {String} The changelog for all the commits in `context.commits`.
  */
-async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRelease, options: {repositoryUrl}}) {
-  const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig);
+async function releaseNotesGenerator(pluginConfig, context) {
+  const {
+    commits,
+    lastRelease,
+    nextRelease,
+    options: {repositoryUrl},
+  } = context;
+  const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
   const {resource: hostname, port, name: repository, owner, protocols} = gitUrlParse(repositoryUrl);
   const protocol = protocols.includes('https') ? 'https' : protocols.includes('http') ? 'http' : 'https';
@@ -42,7 +48,7 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
   );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
-  const context = {
+  const changelogContext = {
     version: nextRelease.version,
     host: url.format({protocol, hostname, port}),
     owner,
@@ -61,7 +67,7 @@ async function releaseNotesGenerator(pluginConfig, {commits, lastRelease, nextRe
   debug('previousTag: %o', previousTag);
   debug('currentTag: %o', currentTag);
 
-  return getStream(intoStream.obj(parsedCommits).pipe(writer(context, writerOpts)));
+  return getStream(intoStream.obj(parsedCommits).pipe(writer(changelogContext, writerOpts)));
 }
 
 module.exports = releaseNotesGenerator;
