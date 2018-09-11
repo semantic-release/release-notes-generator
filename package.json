@@ -20,7 +20,7 @@
     "conventional-changelog-writer": "^4.0.0",
     "conventional-commits-filter": "^2.0.0",
     "conventional-commits-parser": "^3.0.0",
-    "debug": "^3.1.0",
+    "debug": "^4.0.0",
     "get-stream": "^4.0.0",
     "git-url-parse": "^10.0.1",
     "import-from": "^2.1.0",
