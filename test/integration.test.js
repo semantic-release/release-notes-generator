@@ -1,7 +1,7 @@
 import {promisify} from 'util';
 import test from 'ava';
 import escape from 'escape-string-regexp';
-import releaseNotesGenerator from '..';
+import {generateNotes} from '..';
 
 const cwd = process.cwd();
 const repositoryUrl = 'https://github.com/owner/repo';
@@ -13,7 +13,7 @@ test('Use "conventional-changelog-angular" by default', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+  const changelog = await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
@@ -30,7 +30,7 @@ test('Accept a "preset" option', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {preset: 'eslint'},
     {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
@@ -61,7 +61,7 @@ test('Accept a "config" option', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {config: 'conventional-changelog-eslint'},
     {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
@@ -92,7 +92,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
     {hash: '111', message: '%%Fix%% First fix (keyword #123)'},
     {hash: '222', message: '%%Update%% Second feature (keyword JIRA-456)'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {
       parserOpts: {
         headerPattern: /^%%(.*?)%% (.*)$/,
@@ -131,7 +131,7 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
     {hash: '111', message: 'fix(scope1): 2 First fix (fixes #123)'},
     {hash: '222', message: 'fix(scope2): 1 Second fix (fixes #456)'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {
       preset: 'angular',
       parserOpts: {headerPattern: /^(\w*)(?:\((.*)\)): (.*)$/},
@@ -150,7 +150,7 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {
       cwd,
@@ -176,7 +176,7 @@ test('Accept a custom repository URL', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {cwd, options: {repositoryUrl: 'http://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
   );
@@ -196,7 +196,7 @@ test('Accept a custom repository URL with git format', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {cwd, options: {repositoryUrl: 'git@domain.com:owner/repo.git'}, lastRelease, nextRelease, commits}
   );
@@ -216,7 +216,7 @@ test('Accept a custom repository URL with git+http format', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {cwd, options: {repositoryUrl: 'git+http://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
   );
@@ -236,7 +236,7 @@ test('Accept a custom repository URL with git+https format', async t => {
     {hash: '111', message: 'fix(scope1): First fix\n\nresolve #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {cwd, options: {repositoryUrl: 'git+https://domain.com:90/owner/repo'}, lastRelease, nextRelease, commits}
   );
@@ -263,7 +263,7 @@ test('Accept a Bitbucket repository URL', async t => {
     {hash: '111', message: 'fix(scope1): First fix\n\nResolves #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {cwd, options: {repositoryUrl: 'git+https://bitbucket.org/owner/repo'}, lastRelease, nextRelease, commits}
   );
@@ -290,7 +290,7 @@ test('Accept a Gitlab repository URL', async t => {
     {hash: '111', message: 'fix(scope1): First fix\n\nclosed #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
   ];
-  const changelog = await releaseNotesGenerator(
+  const changelog = await generateNotes(
     {},
     {cwd, options: {repositoryUrl: 'git+https://gitlab.com/owner/repo'}, lastRelease, nextRelease, commits}
   );
@@ -317,7 +317,7 @@ test('Ignore malformatted commits and include valid ones', async t => {
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'Feature => Invalid message'},
   ];
-  const changelog = await releaseNotesGenerator({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+  const changelog = await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, /### Bug Fixes/);
   t.regex(changelog, /\* \*\*scope1:\*\* First fix/);
@@ -331,7 +331,7 @@ test('Exclude commits if they have a matching revert commits', async t => {
     {hash: '222', message: 'feat(scope2): First feature'},
     {hash: '333', message: 'revert: feat(scope2): First feature\n\nThis reverts commit 222.\n'},
   ];
-  const changelog = await releaseNotesGenerator({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+  const changelog = await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
   t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
   t.regex(changelog, /### Bug Fixes/);
@@ -346,10 +346,7 @@ test('Throw error if "preset" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    releaseNotesGenerator(
-      {preset: 'unknown-preset'},
-      {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
-    )
+    generateNotes({preset: 'unknown-preset'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits})
   );
 
   t.is(error.code, 'MODULE_NOT_FOUND');
@@ -361,10 +358,7 @@ test('Throw error if "config" doesn`t exist', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    releaseNotesGenerator(
-      {config: 'unknown-config'},
-      {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
-    )
+    generateNotes({config: 'unknown-config'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits})
   );
 
   t.is(error.code, 'MODULE_NOT_FOUND');
@@ -376,7 +370,7 @@ test('ReThrow error from "conventional-changelog"', async t => {
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
   const error = await t.throws(
-    releaseNotesGenerator(
+    generateNotes(
       {
         writerOpts: {
           transform() {
