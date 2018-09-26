@@ -1,6 +1,6 @@
 {
   "name": "@semantic-release/release-notes-generator",
-  "description": "Customizable release-notes-generator plugin for semantic-release",
+  "description": "semantic-release plugin to generate changelog content with conventional-changelog",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager (https://twitter.com/@pvdlg_)",
   "bugs": {
