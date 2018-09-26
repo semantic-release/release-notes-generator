@@ -26,7 +26,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  *
  * @returns {String} The changelog for all the commits in `context.commits`.
  */
-async function releaseNotesGenerator(pluginConfig, context) {
+async function generateNotes(pluginConfig, context) {
   const {
     commits,
     lastRelease,
@@ -70,4 +70,4 @@ async function releaseNotesGenerator(pluginConfig, context) {
   return getStream(intoStream.obj(parsedCommits).pipe(writer(changelogContext, writerOpts)));
 }
 
-module.exports = releaseNotesGenerator;
+module.exports = {generateNotes};
