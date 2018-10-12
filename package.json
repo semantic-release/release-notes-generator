@@ -24,7 +24,7 @@
     "get-stream": "^4.0.0",
     "git-url-parse": "^10.0.1",
     "import-from": "^2.1.0",
-    "into-stream": "^3.1.0",
+    "into-stream": "^4.0.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
