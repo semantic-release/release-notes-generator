@@ -16,7 +16,7 @@
 ## Install
 
 ```bash
-$ npm install @semantic-release/commit-analyzer -D
+$ npm install @semantic-release/release-notes-generator -D
 ```
 
 ## Usage
