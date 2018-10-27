@@ -1,8 +1,7 @@
-const url = require('url');
-const {find} = require('lodash');
+const {parse, format} = require('url');
+const {trimEnd, find} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
-const gitUrlParse = require('git-url-parse');
 const parser = require('conventional-commits-parser').sync;
 const writer = require('conventional-changelog-writer');
 const filter = require('conventional-commits-filter');
@@ -35,8 +34,12 @@ async function generateNotes(pluginConfig, context) {
   } = context;
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
-  const {resource: hostname, port, name: repository, owner, protocols} = gitUrlParse(repositoryUrl);
-  const protocol = protocols.includes('https') ? 'https' : protocols.includes('http') ? 'http' : 'https';
+  const [match, auth, host, path] = /^(?!.+:\/\/)(?:(.*)@)?(.*?):(.*)$/.exec(trimEnd(repositoryUrl, '.git')) || [];
+  let {hostname, port, pathname, protocol} = parse(
+    match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl
+  );
+  protocol = protocol && /http[^s]/.test(protocol) ? 'http' : 'https';
+  const [, owner, repository] = /^\/([^/]+)?\/?(.+)?$/.exec(pathname);
 
   const {issue, commit, referenceActions, issuePrefixes} =
     find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
@@ -50,7 +53,7 @@ async function generateNotes(pluginConfig, context) {
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const changelogContext = {
     version: nextRelease.version,
-    host: url.format({protocol, hostname, port}),
+    host: format({protocol, hostname, port}),
     owner,
     repository,
     previousTag,
