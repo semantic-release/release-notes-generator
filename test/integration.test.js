@@ -251,6 +251,29 @@ test('Accept a custom repository URL with git+http format', async t => {
   );
 });
 
+test('Accept a custom repository URL with ".git" extension', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  const changelog = await generateNotes(
+    {},
+    {cwd, options: {repositoryUrl: 'https://domain.com:90/owner/repo.git'}, lastRelease, nextRelease, commits}
+  );
+
+  t.regex(changelog, new RegExp(escape('(https://domain.com:90/owner/repo/compare/v1.0.0...v2.0.0)')));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(
+    changelog,
+    new RegExp(escape('* **scope1:** First fix ([111](https://domain.com:90/owner/repo/commit/111))'))
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(escape('* **scope2:** Second feature ([222](https://domain.com:90/owner/repo/commit/222))'))
+  );
+});
+
 test('Accept a custom repository URL with git+https format', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix\n\nresolve #10'},
