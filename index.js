@@ -26,15 +26,11 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  * @returns {String} The changelog for all the commits in `context.commits`.
  */
 async function generateNotes(pluginConfig, context) {
-  const {
-    commits,
-    lastRelease,
-    nextRelease,
-    options: {repositoryUrl},
-  } = context;
+  const {commits, lastRelease, nextRelease, options} = context;
+  const repositoryUrl = trimEnd(options.repositoryUrl, '.git');
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
-  const [match, auth, host, path] = /^(?!.+:\/\/)(?:(.*)@)?(.*?):(.*)$/.exec(trimEnd(repositoryUrl, '.git')) || [];
+  const [match, auth, host, path] = /^(?!.+:\/\/)(?:(.*)@)?(.*?):(.*)$/.exec(repositoryUrl) || [];
   let {hostname, port, pathname, protocol} = parse(
     match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl
   );
