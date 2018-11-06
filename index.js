@@ -1,5 +1,5 @@
 const {parse, format} = require('url');
-const {trimEnd, find} = require('lodash');
+const {find} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
 const parser = require('conventional-commits-parser').sync;
@@ -27,7 +27,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  */
 async function generateNotes(pluginConfig, context) {
   const {commits, lastRelease, nextRelease, options} = context;
-  const repositoryUrl = trimEnd(options.repositoryUrl, '.git');
+  const repositoryUrl = options.repositoryUrl.replace(/\.git$/i, '');
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
   const [match, auth, host, path] = /^(?!.+:\/\/)(?:(.*)@)?(.*?):(.*)$/.exec(repositoryUrl) || [];
