@@ -133,13 +133,9 @@ test(loadPreset, 'jshint');
 test(loadConfig, 'jshint');
 
 test('Throw error if "config" doesn`t exist', async t => {
-  const error = await t.throws(loadChangelogConfig({config: 'unknown-config'}, {cwd}));
-
-  t.is(error.code, 'MODULE_NOT_FOUND');
+  await t.throwsAsync(loadChangelogConfig({config: 'unknown-config'}, {cwd}), {code: 'MODULE_NOT_FOUND'});
 });
 
 test('Throw error if "preset" doesn`t exist', async t => {
-  const error = await t.throws(loadChangelogConfig({preset: 'unknown-preset'}, {cwd}));
-
-  t.is(error.code, 'MODULE_NOT_FOUND');
+  await t.throwsAsync(loadChangelogConfig({preset: 'unknown-preset'}, {cwd}), {code: 'MODULE_NOT_FOUND'});
 });
