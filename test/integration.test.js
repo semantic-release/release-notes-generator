@@ -388,11 +388,10 @@ test('Throw error if "preset" doesn`t exist', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const error = await t.throws(
-    generateNotes({preset: 'unknown-preset'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits})
+  await t.throwsAsync(
+    generateNotes({preset: 'unknown-preset'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}),
+    {code: 'MODULE_NOT_FOUND'}
   );
-
-  t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
 test('Throw error if "config" doesn`t exist', async t => {
@@ -400,11 +399,10 @@ test('Throw error if "config" doesn`t exist', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const error = await t.throws(
-    generateNotes({config: 'unknown-config'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits})
+  await t.throwsAsync(
+    generateNotes({config: 'unknown-config'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}),
+    {code: 'MODULE_NOT_FOUND'}
   );
-
-  t.is(error.code, 'MODULE_NOT_FOUND');
 });
 
 test('ReThrow error from "conventional-changelog"', async t => {
@@ -412,7 +410,8 @@ test('ReThrow error from "conventional-changelog"', async t => {
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
   ];
-  const error = await t.throws(
+
+  await t.throwsAsync(
     generateNotes(
       {
         writerOpts: {
@@ -422,8 +421,7 @@ test('ReThrow error from "conventional-changelog"', async t => {
         },
       },
       {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
-    )
+    ),
+    'Test error'
   );
-
-  t.is(error.message, 'Test error');
 });
