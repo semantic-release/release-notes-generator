@@ -16,6 +16,7 @@ async function loadPreset(t, preset) {
   t.truthy(changelogConfig.parserOpts.headerPattern);
   t.truthy(changelogConfig.writerOpts.groupBy);
 }
+
 loadPreset.title = (providedTitle, preset) => `${providedTitle} Load "${preset}" preset`.trim();
 
 /**
@@ -31,6 +32,7 @@ async function loadConfig(t, config) {
   t.truthy(changelogConfig.parserOpts.headerPattern);
   t.truthy(changelogConfig.writerOpts.groupBy);
 }
+
 loadConfig.title = (providedTitle, config) => `${providedTitle} Load "${config}" config`.trim();
 
 test('Load "conventional-changelog-angular" by default', async t => {
