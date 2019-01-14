@@ -1,4 +1,4 @@
-const {parse, format} = require('url');
+const {URL, format} = require('url');
 const {find} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
@@ -31,7 +31,7 @@ async function generateNotes(pluginConfig, context) {
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
   const [match, auth, host, path] = /^(?!.+:\/\/)(?:(.*)@)?(.*?):(.*)$/.exec(repositoryUrl) || [];
-  let {hostname, port, pathname, protocol} = parse(
+  let {hostname, port, pathname, protocol} = new URL(
     match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl
   );
   protocol = protocol && /http[^s]/.test(protocol) ? 'http' : 'https';
