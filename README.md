@@ -30,7 +30,7 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
       "preset": "angular",
       "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
-      },
+      }
     }],
     ["semantic-release/release-notes-generator", {
       "preset": "angular",
@@ -38,7 +38,7 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
       },
       "writerOpts": {
-        "commitsSort": ["subject", "scope"],
+        "commitsSort": ["subject", "scope"]
       }
     }]
   ]
