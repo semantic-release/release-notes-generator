@@ -66,7 +66,7 @@ async function generateNotes(pluginConfig, context) {
   debug('previousTag: %o', previousTag);
   debug('currentTag: %o', currentTag);
 
-  return getStream(intoStream.obj(parsedCommits).pipe(writer(changelogContext, writerOpts)));
+  return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
 }
 
 module.exports = {generateNotes};
