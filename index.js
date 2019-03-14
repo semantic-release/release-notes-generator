@@ -54,7 +54,7 @@ async function generateNotes(pluginConfig, context) {
     repository,
     previousTag,
     currentTag,
-    linkCompare: currentTag && previousTag,
+    linkCompare: (typeof writerOpts.linkCompare === "boolean") ? writerOpts.linkCompare : currentTag && previousTag,
     issue,
     commit,
   };
