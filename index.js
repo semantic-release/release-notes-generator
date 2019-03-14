@@ -55,6 +55,7 @@ async function generateNotes(pluginConfig, context) {
     previousTag,
     currentTag,
     linkCompare: typeof writerOpts.linkCompare === 'boolean' ? writerOpts.linkCompare : currentTag && previousTag,
+    linkReferences: typeof writerOpts.linkReferences === 'boolean' ? writerOpts.linkReferences: true,
     issue,
     commit,
   };
