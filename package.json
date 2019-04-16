@@ -37,7 +37,7 @@
     "conventional-changelog-jshint": "^2.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "escape-string-regexp": "^2.0.0",
-    "nyc": "^13.1.0",
+    "nyc": "^14.0.0",
     "semantic-release": "^15.0.0",
     "xo": "^0.24.0"
   },
