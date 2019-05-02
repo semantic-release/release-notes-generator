@@ -27,6 +27,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  */
 async function generateNotes(pluginConfig, context) {
   const {commits, lastRelease, nextRelease, options} = context;
+  const customHost = pluginConfig.host;
   const repositoryUrl = options.repositoryUrl.replace(/\.git$/i, '');
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
@@ -49,7 +50,7 @@ async function generateNotes(pluginConfig, context) {
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const changelogContext = {
     version: nextRelease.version,
-    host: format({protocol, hostname, port}),
+    host: customHost || format({protocol, hostname, port}),
     owner,
     repository,
     previousTag,
