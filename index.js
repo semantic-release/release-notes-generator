@@ -1,5 +1,5 @@
 const {URL, format} = require('url');
-const {find} = require('lodash');
+const {find, merge} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
 const parser = require('conventional-commits-parser').sync;
@@ -47,24 +47,33 @@ async function generateNotes(pluginConfig, context) {
   );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
-  const changelogContext = {
-    version: nextRelease.version,
-    host: format({protocol, hostname, port}),
-    owner,
-    repository,
-    previousTag,
-    currentTag,
-    linkCompare: currentTag && previousTag,
-    issue,
-    commit,
-  };
+  const {host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig} = pluginConfig;
+  const changelogContext = merge(
+    {
+      version: nextRelease.version,
+      host: format({protocol, hostname, port}),
+      owner,
+      repository,
+      previousTag,
+      currentTag,
+      linkCompare: currentTag && previousTag,
+      issue,
+      commit,
+    },
+    {host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig}
+  );
 
-  debug('version: %o', nextRelease.version);
-  debug('host: %o', hostname);
-  debug('owner: %o', owner);
-  debug('repository: %o', repository);
-  debug('previousTag: %o', previousTag);
-  debug('currentTag: %o', currentTag);
+  debug('version: %o', changelogContext.version);
+  debug('host: %o', changelogContext.hostname);
+  debug('owner: %o', changelogContext.owner);
+  debug('repository: %o', changelogContext.repository);
+  debug('previousTag: %o', changelogContext.previousTag);
+  debug('currentTag: %o', changelogContext.currentTag);
+  debug('host: %o', changelogContext.host);
+  debug('host: %o', changelogContext.host);
+  debug('linkReferences: %o', changelogContext.linkReferences);
+  debug('issue: %o', changelogContext.issue);
+  debug('commit: %o', changelogContext.commit);
 
   return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
 }

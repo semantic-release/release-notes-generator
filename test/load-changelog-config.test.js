@@ -50,7 +50,7 @@ test('Accept a "parserOpts" object as option', async t => {
 
   t.is(customParserOpts.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOpts.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
-  t.falsy(changelogConfig.parserOpts.noteKeywords);
+  t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parserOpts.noteKeywords);
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
@@ -61,7 +61,7 @@ test('Accept a "writerOpts" object as option', async t => {
 
   t.is(customWriterOpts.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOpts.commitsSort, changelogConfig.writerOpts.commitsSort);
-  t.falsy(changelogConfig.writerOpts.noteGroupsSort);
+  t.deepEqual(changelogConfig.writerOpts.noteGroupsSort, angularChangelogConfig.writerOpts.noteGroupsSort);
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
 });
 
