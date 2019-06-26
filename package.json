@@ -24,7 +24,8 @@
     "get-stream": "^5.0.0",
     "import-from": "^3.0.0",
     "into-stream": "^5.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "read-pkg-up": "^6.0.0"
   },
   "devDependencies": {
     "ava": "^2.0.0",
@@ -37,8 +38,12 @@
     "conventional-changelog-jshint": "^2.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "escape-string-regexp": "^2.0.0",
+    "fs-extra": "^8.0.1",
     "nyc": "^14.0.0",
+    "proxyquire": "^2.1.0",
     "semantic-release": "^15.0.0",
+    "sinon": "^7.3.2",
+    "tempy": "^0.3.0",
     "xo": "^0.24.0"
   },
   "engines": {

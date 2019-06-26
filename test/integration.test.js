@@ -1,10 +1,18 @@
 import {promisify} from 'util';
+import path from 'path';
 import test from 'ava';
+import {outputJson} from 'fs-extra';
 import escape from 'escape-string-regexp';
+import tempy from 'tempy';
+import proxyquire from 'proxyquire';
+import {spy} from 'sinon';
 import {generateNotes} from '..';
 
 const cwd = process.cwd();
-const repositoryUrl = 'https://github.com/owner/repo';
+const host = 'https://github.com';
+const owner = 'owner';
+const repository = 'repo';
+const repositoryUrl = `${host}/${owner}/${repository}`;
 const lastRelease = {gitTag: 'v1.0.0'};
 const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
 
@@ -23,6 +31,61 @@ test('Use "conventional-changelog-angular" by default', async t => {
     changelog,
     new RegExp(escape('* **scope2:** Second feature ([222](https://github.com/owner/repo/commit/222))'))
   );
+});
+
+test('Set conventional-changelog-writer context', async t => {
+  const cwd = tempy.directory();
+  const writer = spy(require('conventional-changelog-writer'));
+  const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
+
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+
+  t.deepEqual(writer.args[0][0], {
+    version: nextRelease.version,
+    host,
+    owner,
+    repository,
+    previousTag: lastRelease.gitTag,
+    currentTag: nextRelease.gitTag,
+    linkCompare: lastRelease.gitTag,
+    issue: 'issues',
+    commit: 'commit',
+    packageData: undefined,
+    linkReferences: undefined,
+  });
+});
+
+test('Set conventional-changelog-writer context with package.json', async t => {
+  const cwd = tempy.directory();
+  const writer = spy(require('conventional-changelog-writer'));
+  const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
+
+  const packageData = {name: 'package', version: '0.0.0'};
+  await outputJson(path.resolve(cwd, 'package.json'), packageData);
+
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): Second feature'},
+  ];
+  await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+
+  t.deepEqual(writer.args[0][0], {
+    version: nextRelease.version,
+    host,
+    owner,
+    repository,
+    previousTag: lastRelease.gitTag,
+    currentTag: nextRelease.gitTag,
+    linkCompare: lastRelease.gitTag,
+    issue: 'issues',
+    commit: 'commit',
+    packageData,
+    linkReferences: undefined,
+  });
 });
 
 test('Accept a "preset" option', async t => {
