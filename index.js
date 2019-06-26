@@ -5,6 +5,7 @@ const intoStream = require('into-stream');
 const parser = require('conventional-commits-parser').sync;
 const writer = require('conventional-changelog-writer');
 const filter = require('conventional-commits-filter');
+const readPkgUp = require('read-pkg-up');
 const debug = require('debug')('semantic-release:release-notes-generator');
 const loadChangelogConfig = require('./lib/load-changelog-config');
 const HOSTS_CONFIG = require('./lib/hosts-config');
@@ -26,7 +27,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  * @returns {String} The changelog for all the commits in `context.commits`.
  */
 async function generateNotes(pluginConfig, context) {
-  const {commits, lastRelease, nextRelease, options} = context;
+  const {commits, lastRelease, nextRelease, options, cwd} = context;
   const repositoryUrl = options.repositoryUrl.replace(/\.git$/i, '');
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
@@ -59,6 +60,7 @@ async function generateNotes(pluginConfig, context) {
       linkCompare: currentTag && previousTag,
       issue,
       commit,
+      packageData: ((await readPkgUp({normalize: false, cwd})) || {}).package,
     },
     {host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig}
   );
