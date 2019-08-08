@@ -208,6 +208,24 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
 });
 
+test('Accept a partial "presetConfig" object as option', async t => {
+  const commits = [{hash: '111', message: 'fix: First fix'}, {hash: '222', message: 'test: Change test'}];
+  const changelog = await generateNotes(
+    {
+      preset: 'conventionalcommits',
+      presetConfig: {
+        types: [{type: 'fix', section: 'Bug Fixes', hidden: true}, {type: 'test', section: 'Test !!', hidden: false}],
+      },
+    },
+    {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
+  );
+
+  t.notRegex(changelog, /### Bug Fixes/);
+  t.notRegex(changelog, new RegExp(escape('First fix')));
+  t.regex(changelog, /### Test !!/);
+  t.regex(changelog, new RegExp(escape('* Change test ([222](https://github.com/owner/repo/commit/222))')));
+});
+
 test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},

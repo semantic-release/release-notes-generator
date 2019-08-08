@@ -8,10 +8,11 @@ const cwd = process.cwd();
  *
  * @method loadPreset
  * @param {Object} t AVA assertion library.
- * @param {[type]} preset the `conventional-changelog` preset to test.
+ * @param {String} preset the `conventional-changelog` preset to test.
+ * @param {Object} pluginOptions The plugin configuration.
  */
-async function loadPreset(t, preset) {
-  const changelogConfig = await loadChangelogConfig({preset}, {cwd});
+async function loadPreset(t, preset, pluginOptions) {
+  const changelogConfig = await loadChangelogConfig({...pluginOptions, preset}, {cwd});
 
   t.truthy(changelogConfig.parserOpts.headerPattern);
   t.truthy(changelogConfig.writerOpts.groupBy);
@@ -24,10 +25,14 @@ loadPreset.title = (providedTitle, preset) => `${providedTitle} Load "${preset}"
  *
  * @method loadPreset
  * @param {Object} t AVA assertion library.
- * @param {[type]} config the `conventional-changelog` config to test.
+ * @param {String} config the `conventional-changelog` config to test.
+ * @param {Object} pluginOptions The plugin configuration.
  */
-async function loadConfig(t, config) {
-  const changelogConfig = await loadChangelogConfig({config: `conventional-changelog-${config}`}, {cwd});
+async function loadConfig(t, config, pluginOptions) {
+  const changelogConfig = await loadChangelogConfig(
+    {...pluginOptions, config: `conventional-changelog-${config}`},
+    {cwd}
+  );
 
   t.truthy(changelogConfig.parserOpts.headerPattern);
   t.truthy(changelogConfig.writerOpts.groupBy);
@@ -133,6 +138,8 @@ test(loadPreset, 'express');
 test(loadConfig, 'express');
 test(loadPreset, 'jshint');
 test(loadConfig, 'jshint');
+test(loadPreset, 'conventionalcommits', {presetConfig: {}});
+test(loadConfig, 'conventionalcommits', {presetConfig: {}});
 
 test('Throw error if "config" doesn`t exist', async t => {
   await t.throwsAsync(loadChangelogConfig({config: 'unknown-config'}, {cwd}), {code: 'MODULE_NOT_FOUND'});
