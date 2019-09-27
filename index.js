@@ -60,7 +60,7 @@ async function generateNotes(pluginConfig, context) {
       linkCompare: currentTag && previousTag,
       issue,
       commit,
-      packageData: ((await readPkgUp({normalize: false, cwd})) || {}).package,
+      packageData: ((await readPkgUp({normalize: false, cwd})) || {}).packageJson,
     },
     {host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig}
   );
