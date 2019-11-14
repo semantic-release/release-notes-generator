@@ -35,6 +35,7 @@ async function generateNotes(pluginConfig, context) {
   let {hostname, port, pathname, protocol} = new URL(
     match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl
   );
+  port = protocol.includes('ssh') ? '' : port;
   protocol = protocol && /http[^s]/.test(protocol) ? 'http' : 'https';
   const [, owner, repository] = /^\/([^/]+)?\/?(.+)?$/.exec(pathname);
 
