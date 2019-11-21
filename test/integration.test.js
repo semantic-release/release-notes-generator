@@ -209,12 +209,18 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
 });
 
 test('Accept a partial "presetConfig" object as option', async t => {
-  const commits = [{hash: '111', message: 'fix: First fix'}, {hash: '222', message: 'test: Change test'}];
+  const commits = [
+    {hash: '111', message: 'fix: First fix'},
+    {hash: '222', message: 'test: Change test'},
+  ];
   const changelog = await generateNotes(
     {
       preset: 'conventionalcommits',
       presetConfig: {
-        types: [{type: 'fix', section: 'Bug Fixes', hidden: true}, {type: 'test', section: 'Test !!', hidden: false}],
+        types: [
+          {type: 'fix', section: 'Bug Fixes', hidden: true},
+          {type: 'test', section: 'Test !!', hidden: false},
+        ],
       },
     },
     {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
