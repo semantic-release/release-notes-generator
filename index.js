@@ -42,10 +42,19 @@ async function generateNotes(pluginConfig, context) {
   const {issue, commit, referenceActions, issuePrefixes} =
     find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
   const parsedCommits = filter(
-    commits.map(rawCommit => ({
-      ...rawCommit,
-      ...parser(rawCommit.message, {referenceActions, issuePrefixes, ...parserOpts}),
-    }))
+    commits
+      .filter(({message, hash}) => {
+        if (!message.trim()) {
+          debug('Skip commit %s with empty message', hash);
+          return false;
+        }
+
+        return true;
+      })
+      .map(rawCommit => ({
+        ...rawCommit,
+        ...parser(rawCommit.message, {referenceActions, issuePrefixes, ...parserOpts}),
+      }))
   );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;

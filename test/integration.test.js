@@ -582,6 +582,21 @@ test('Exclude commits if they have a matching revert commits', async t => {
   t.notRegex(changelog, /Second feature/);
 });
 
+test('Exclude commits with empty message', async t => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: ''},
+    {hash: '333', message: '  '},
+  ];
+  const changelog = await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+
+  t.regex(changelog, new RegExp(escape('(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)')));
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, new RegExp(escape('* **scope1:** First fix ([111](https://github.com/owner/repo/commit/111))')));
+  t.notRegex(changelog, /222/);
+  t.notRegex(changelog, /333/);
+});
+
 test('Throw error if "preset" doesn`t exist', async t => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
