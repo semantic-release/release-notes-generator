@@ -49,7 +49,10 @@ test('Load "conventional-changelog-angular" by default', async t => {
 });
 
 test('Accept a "parserOpts" object as option', async t => {
-  const customParserOpts = {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'shortDesc']};
+  const customParserOpts = {
+    headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
+    headerCorrespondence: ['tag', 'shortDesc'],
+  };
   const changelogConfig = await loadChangelogConfig({parserOpts: customParserOpts}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
@@ -71,7 +74,10 @@ test('Accept a "writerOpts" object as option', async t => {
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a preset', async t => {
-  const customParserOpts = {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'shortDesc']};
+  const customParserOpts = {
+    headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
+    headerCorrespondence: ['tag', 'shortDesc'],
+  };
   const changelogConfig = await loadChangelogConfig({parserOpts: customParserOpts, preset: 'angular'}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
@@ -93,7 +99,10 @@ test('Accept a "writerOpts" object as option that overwrite a preset', async t =
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a config', async t => {
-  const customParserOpts = {headerPattern: /^##(.*?)## (.*)$/, headerCorrespondence: ['tag', 'shortDesc']};
+  const customParserOpts = {
+    headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
+    headerCorrespondence: ['tag', 'shortDesc'],
+  };
   const changelogConfig = await loadChangelogConfig(
     {
       parserOpts: customParserOpts,

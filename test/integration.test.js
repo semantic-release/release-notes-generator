@@ -158,7 +158,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
   const changelog = await generateNotes(
     {
       parserOpts: {
-        headerPattern: /^%%(.*?)%% (.*)$/,
+        headerPattern: /^%%(?<tag>.*?)%% (?<message>.*)$/,
         headerCorrespondence: ['tag', 'message'],
         referenceActions: ['keyword'],
         issuePrefixes: ['#', 'JIRA-'],
@@ -197,7 +197,7 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
   const changelog = await generateNotes(
     {
       preset: 'angular',
-      parserOpts: {headerPattern: /^(\w*)(?:\((.*)\)): (.*)$/},
+      parserOpts: {headerPattern: /^(?<type>\w*)(?:\((?<scope>.*)\)): (?<subject>.*)$/},
       writerOpts: {commitsSort: ['subject', 'scope']},
     },
     {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
