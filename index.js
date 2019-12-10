@@ -1,4 +1,4 @@
-const {URL, format} = require('url');
+const {format} = require('url');
 const {find, merge} = require('lodash');
 const getStream = require('get-stream');
 const intoStream = require('into-stream');
@@ -31,13 +31,13 @@ async function generateNotes(pluginConfig, context) {
   const repositoryUrl = options.repositoryUrl.replace(/\.git$/i, '');
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
 
-  const [match, auth, host, path] = /^(?!.+:\/\/)(?:(.*)@)?(.*?):(.*)$/.exec(repositoryUrl) || [];
+  const [match, auth, host, path] = /^(?!.+:\/\/)(?:(?<auth>.*)@)?(?<host>.*?):(?<path>.*)$/.exec(repositoryUrl) || [];
   let {hostname, port, pathname, protocol} = new URL(
     match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl
   );
   port = protocol.includes('ssh') ? '' : port;
   protocol = protocol && /http[^s]/.test(protocol) ? 'http' : 'https';
-  const [, owner, repository] = /^\/([^/]+)?\/?(.+)?$/.exec(pathname);
+  const [, owner, repository] = /^\/(?<owner>[^/]+)?\/?(?<repository>.+)?$/.exec(pathname);
 
   const {issue, commit, referenceActions, issuePrefixes} =
     find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
