@@ -35,7 +35,7 @@
     "fs-extra": "^8.0.1",
     "nyc": "^15.0.0",
     "proxyquire": "^2.1.0",
-    "semantic-release": "^15.0.0",
+    "semantic-release": "^16.0.0",
     "sinon": "^8.0.0",
     "tempy": "^0.3.0",
     "xo": "^0.25.0"
