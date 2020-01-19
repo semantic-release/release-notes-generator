@@ -1,12 +1,12 @@
-import {promisify} from 'util';
-import path from 'path';
-import test from 'ava';
-import {outputJson} from 'fs-extra';
-import escape from 'escape-string-regexp';
-import tempy from 'tempy';
-import proxyquire from 'proxyquire';
-import {spy} from 'sinon';
-import {generateNotes} from '..';
+const {promisify} = require('util');
+const path = require('path');
+const test = require('ava');
+const {outputJson} = require('fs-extra');
+const escape = require('escape-string-regexp');
+const tempy = require('tempy');
+const proxyquire = require('proxyquire');
+const {spy} = require('sinon');
+const {generateNotes} = require('..');
 
 const cwd = process.cwd();
 const host = 'https://github.com';
@@ -232,7 +232,7 @@ test('Accept a partial "presetConfig" object as option', async t => {
   t.regex(changelog, new RegExp(escape('* Change test ([222](https://github.com/owner/repo/commit/222))')));
 });
 
-test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
+test('Use "gitHead" = require("lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -619,7 +619,7 @@ test('Throw error if "config" doesn`t exist', async t => {
   );
 });
 
-test('ReThrow error from "conventional-changelog"', async t => {
+test('ReThrow error = require("conventional-changelog"', async t => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
@@ -636,6 +636,6 @@ test('ReThrow error from "conventional-changelog"', async t => {
       },
       {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
     ),
-    'Test error'
+    {message: 'Test error'}
   );
 });
