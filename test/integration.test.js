@@ -232,7 +232,7 @@ test('Accept a partial "presetConfig" object as option', async t => {
   t.regex(changelog, new RegExp(escape('* Change test ([222](https://github.com/owner/repo/commit/222))')));
 });
 
-test('Use "gitHead" = require("lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
+test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -619,7 +619,7 @@ test('Throw error if "config" doesn`t exist', async t => {
   );
 });
 
-test('ReThrow error = require("conventional-changelog"', async t => {
+test('ReThrow error from "conventional-changelog"', async t => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
