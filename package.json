@@ -80,8 +80,7 @@
     "trailingComma": "es5"
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "next"
+    "access": "public"
   },
   "repository": {
     "type": "git",
