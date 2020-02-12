@@ -37,7 +37,7 @@
     "proxyquire": "^2.1.0",
     "semantic-release": "^17.0.0",
     "sinon": "^8.0.0",
-    "tempy": "^0.3.0",
+    "tempy": "^0.4.0",
     "xo": "^0.25.0"
   },
   "engines": {
