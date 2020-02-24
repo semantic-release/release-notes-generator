@@ -82,7 +82,6 @@ async function generateNotes(pluginConfig, context) {
   debug('previousTag: %o', changelogContext.previousTag);
   debug('currentTag: %o', changelogContext.currentTag);
   debug('host: %o', changelogContext.host);
-  debug('host: %o', changelogContext.host);
   debug('linkReferences: %o', changelogContext.linkReferences);
   debug('issue: %o', changelogContext.issue);
   debug('commit: %o', changelogContext.commit);
