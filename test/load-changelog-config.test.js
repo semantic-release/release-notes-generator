@@ -49,88 +49,88 @@ test('Load "conventional-changelog-angular" by default', async t => {
 });
 
 test('Accept a "parserOpts" object as option', async t => {
-  const customParserOpts = {
+  const customParserOptions = {
     headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
     headerCorrespondence: ['tag', 'shortDesc'],
   };
-  const changelogConfig = await loadChangelogConfig({parserOpts: customParserOpts}, {cwd});
+  const changelogConfig = await loadChangelogConfig({parserOpts: customParserOptions}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
-  t.is(customParserOpts.headerPattern, changelogConfig.parserOpts.headerPattern);
-  t.deepEqual(customParserOpts.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
+  t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
+  t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parserOpts.noteKeywords);
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option', async t => {
-  const customWriterOpts = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
-  const changelogConfig = await loadChangelogConfig({writerOpts: customWriterOpts}, {cwd});
+  const customWriterOptions = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
+  const changelogConfig = await loadChangelogConfig({writerOpts: customWriterOptions}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
-  t.is(customWriterOpts.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
-  t.deepEqual(customWriterOpts.commitsSort, changelogConfig.writerOpts.commitsSort);
+  t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
+  t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
   t.deepEqual(changelogConfig.writerOpts.noteGroupsSort, angularChangelogConfig.writerOpts.noteGroupsSort);
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a preset', async t => {
-  const customParserOpts = {
+  const customParserOptions = {
     headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
     headerCorrespondence: ['tag', 'shortDesc'],
   };
-  const changelogConfig = await loadChangelogConfig({parserOpts: customParserOpts, preset: 'angular'}, {cwd});
+  const changelogConfig = await loadChangelogConfig({parserOpts: customParserOptions, preset: 'angular'}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
-  t.is(customParserOpts.headerPattern, changelogConfig.parserOpts.headerPattern);
-  t.deepEqual(customParserOpts.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
+  t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
+  t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a preset', async t => {
-  const customWriterOpts = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
-  const changelogConfig = await loadChangelogConfig({writerOpts: customWriterOpts, preset: 'angular'}, {cwd});
+  const customWriterOptions = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
+  const changelogConfig = await loadChangelogConfig({writerOpts: customWriterOptions, preset: 'angular'}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
-  t.is(customWriterOpts.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
-  t.deepEqual(customWriterOpts.commitsSort, changelogConfig.writerOpts.commitsSort);
+  t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
+  t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
   t.truthy(changelogConfig.writerOpts.noteGroupsSort);
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a config', async t => {
-  const customParserOpts = {
+  const customParserOptions = {
     headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
     headerCorrespondence: ['tag', 'shortDesc'],
   };
   const changelogConfig = await loadChangelogConfig(
     {
-      parserOpts: customParserOpts,
+      parserOpts: customParserOptions,
       config: 'conventional-changelog-angular',
     },
     {cwd}
   );
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
-  t.is(customParserOpts.headerPattern, changelogConfig.parserOpts.headerPattern);
-  t.deepEqual(customParserOpts.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
+  t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
+  t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a config', async t => {
-  const customWriterOpts = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
+  const customWriterOptions = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
   const changelogConfig = await loadChangelogConfig(
     {
-      writerOpts: customWriterOpts,
+      writerOpts: customWriterOptions,
       config: 'conventional-changelog-angular',
     },
     {cwd}
   );
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
-  t.is(customWriterOpts.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
-  t.deepEqual(customWriterOpts.commitsSort, changelogConfig.writerOpts.commitsSort);
+  t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
+  t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
   t.truthy(changelogConfig.writerOpts.noteGroupsSort);
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
 });
