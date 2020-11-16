@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "ava": "^3.1.0",
-    "codecov": "^3.0.0",
     "conventional-changelog-atom": "^2.0.0",
     "conventional-changelog-conventionalcommits": "^4.1.0",
     "conventional-changelog-ember": "^2.0.0",
@@ -87,11 +86,11 @@
     "url": "https://github.com/semantic-release/release-notes-generator.git"
   },
   "scripts": {
-    "codecov": "codecov -f coverage/coverage-final.json",
     "lint": "xo",
     "pretest": "npm run lint",
     "semantic-release": "semantic-release",
-    "test": "nyc ava -v"
+    "test": "nyc ava -v",
+    "test:ci": "nyc ava -v"
   },
   "xo": {
     "prettier": true,
@@ -99,5 +98,10 @@
     "rules": {
       "unicorn/string-content": "off"
     }
+  },
+  "renovate": {
+    "extends": [
+      "github>semantic-release/.github"
+    ]
   }
 }
