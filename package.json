@@ -23,7 +23,7 @@
     "read-pkg-up": "^7.0.0"
   },
   "devDependencies": {
-    "ava": "3.13.0",
+    "ava": "3.14.0",
     "conventional-changelog-atom": "2.0.8",
     "conventional-changelog-conventionalcommits": "4.5.0",
     "conventional-changelog-ember": "2.0.9",
