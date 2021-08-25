@@ -72,11 +72,6 @@
     ],
     "all": true
   },
-  "ava": {
-	  "require":[
-		  "esm"
-	  ]
-  },
   "peerDependencies": {
     "semantic-release": ">=15.8.0 <18.0.0"
   },
@@ -108,9 +103,6 @@
 		"import/no-useless-path-segments": "off",
 		"node/no-unsupported-features/es-syntax": "off"
 	}
-  },
-  "ava": {
-	 "verbose": true 
   },
   "renovate": {
 	  "extends": [
