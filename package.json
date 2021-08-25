@@ -1,5 +1,6 @@
 {
   "name": "@semantic-release/release-notes-generator",
+  "type":"module",
   "description": "semantic-release plugin to generate changelog content with conventional-changelog",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager (https://twitter.com/@pvdlg_)",
@@ -58,7 +59,7 @@
     "semantic-release"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "exports": "./index.js",
   "nyc": {
     "include": [
       "lib/**/*.js",
@@ -70,6 +71,11 @@
       "html"
     ],
     "all": true
+  },
+  "ava": {
+	  "require":[
+		  "esm"
+	  ]
   },
   "peerDependencies": {
     "semantic-release": ">=15.8.0 <18.0.0"
@@ -95,13 +101,20 @@
   "xo": {
     "prettier": true,
     "space": true,
-    "rules": {
-      "unicorn/string-content": "off"
-    }
+	"rules": {
+		"unicorn/string-content": "off",
+		"unicorn/import-index": "off",
+		"import/extensions": "off",
+		"import/no-useless-path-segments": "off",
+		"node/no-unsupported-features/es-syntax": "off"
+	}
+  },
+  "ava": {
+	 "verbose": true 
   },
   "renovate": {
-    "extends": [
-      "github>semantic-release/.github"
-    ]
+	  "extends": [
+		  "github>semantic-release/.github"
+	]
   }
 }

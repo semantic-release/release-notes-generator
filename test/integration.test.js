@@ -1,13 +1,15 @@
-const {promisify} = require('util');
-const path = require('path');
-const test = require('ava');
-const {outputJson} = require('fs-extra');
-const escape = require('escape-string-regexp');
-const tempy = require('tempy');
-const proxyquire = require('proxyquire');
-const {spy} = require('sinon');
-const {generateNotes} = require('..');
-
+import {promisify} from 'util';
+import path from 'path';
+import test from 'ava';
+const {outputJson} = 'fs-extra';
+import escape from 'escape-string-regexp';
+import tempy from 'tempy';
+import proxyquire from 'proxyquire';
+import sinon from 'sinon';
+const {spy} = sinon;
+import {generateNotes} from '../index.js';
+import conventionalChangelogWriter from 'conventional-changelog-writer';
+import conventionalChangelogEslint from 'conventional-changelog-eslint';
 const cwd = process.cwd();
 const host = 'https://github.com';
 const owner = 'owner';
@@ -35,7 +37,8 @@ test('Use "conventional-changelog-angular" by default', async t => {
 
 test('Set conventional-changelog-writer context', async t => {
   const cwd = tempy.directory();
-  const writer = spy(require('conventional-changelog-writer'));
+  const writer = spy(conventionalChangelogWriter);
+
   const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
 
   const commits = [
@@ -61,7 +64,7 @@ test('Set conventional-changelog-writer context', async t => {
 
 test('Set conventional-changelog-writer context with package.json', async t => {
   const cwd = tempy.directory();
-  const writer = spy(require('conventional-changelog-writer'));
+  const writer = spy(conventionalChangelogWriter);
   const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
 
   const packageData = {name: 'package', version: '0.0.0'};
@@ -163,7 +166,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
         referenceActions: ['keyword'],
         issuePrefixes: ['#', 'JIRA-'],
       },
-      writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
+      writerOpts: (await promisify(conventionalChangelogEslint)()).writerOpts,
     },
     {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );
