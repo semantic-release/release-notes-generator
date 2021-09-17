@@ -13,9 +13,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 10
-          - 12
-          - 14
+          - 14.17
+          - 16
         os:
           - ubuntu-latest
     runs-on: "${{ matrix.os }}"
@@ -38,4 +37,6 @@ jobs:
           node-version: 16
           cache: npm
       - run: npm ci
+      - name: Ensure dependencies are compatible with the engines range
+        run: npx ls-engines
       - run: npm run lint
