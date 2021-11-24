@@ -14,7 +14,7 @@
     "conventional-changelog-angular": "^5.0.0",
     "conventional-changelog-writer": "^5.0.0",
     "conventional-commits-filter": "^2.0.0",
-    "conventional-commits-parser": "^3.0.0",
+    "conventional-commits-parser": "^3.2.3",
     "debug": "^4.0.0",
     "get-stream": "^6.0.0",
     "import-from": "^4.0.0",
