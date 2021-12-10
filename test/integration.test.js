@@ -1,12 +1,11 @@
-const {promisify} = require('util');
-const path = require('path');
-const test = require('ava');
-const {outputJson} = require('fs-extra');
-const escape = require('escape-string-regexp');
-const tempy = require('tempy');
-const proxyquire = require('proxyquire');
-const {spy} = require('sinon');
-const {generateNotes} = require('..');
+import path from 'path';
+import test from 'ava';
+import fs from 'fs-extra';
+import escape from 'escape-string-regexp';
+import tempy from 'tempy';
+import * as td from 'testdouble';
+import { generateNotes } from '../index.js';
+import { promisify } from 'node:util';
 
 const cwd = process.cwd();
 const host = 'https://github.com';
@@ -15,6 +14,10 @@ const repository = 'repo';
 const repositoryUrl = `${host}/${owner}/${repository}`;
 const lastRelease = {gitTag: 'v1.0.0'};
 const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
+
+test.afterEach(() => {
+  td.reset();
+});
 
 test('Use "conventional-changelog-angular" by default', async (t) => {
   const commits = [
@@ -35,8 +38,8 @@ test('Use "conventional-changelog-angular" by default', async (t) => {
 
 test('Set conventional-changelog-writer context', async (t) => {
   const cwd = tempy.directory();
-  const writer = spy(require('conventional-changelog-writer'));
-  const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
+  const writer = td.replace('conventional-changelog-writer');
+  const {generateNotes} = await import('../index.js');
 
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
@@ -44,7 +47,7 @@ test('Set conventional-changelog-writer context', async (t) => {
   ];
   await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
-  t.deepEqual(writer.args[0][0], {
+  td.verify(writer({
     version: nextRelease.version,
     host,
     owner,
@@ -56,16 +59,16 @@ test('Set conventional-changelog-writer context', async (t) => {
     commit: 'commit',
     packageData: undefined,
     linkReferences: undefined,
-  });
+  }));
 });
 
 test('Set conventional-changelog-writer context with package.json', async (t) => {
   const cwd = tempy.directory();
-  const writer = spy(require('conventional-changelog-writer'));
-  const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
+  const writer = await td.replaceEsm('conventional-changelog-writer');
+  const {generateNotes} = await import('../index.js');
 
   const packageData = {name: 'package', version: '0.0.0'};
-  await outputJson(path.resolve(cwd, 'package.json'), packageData);
+  await fs.outputJson(path.resolve(cwd, 'package.json'), packageData);
 
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
@@ -73,7 +76,7 @@ test('Set conventional-changelog-writer context with package.json', async (t) =>
   ];
   await generateNotes({}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
 
-  t.deepEqual(writer.args[0][0], {
+  td.verify(writer({
     version: nextRelease.version,
     host,
     owner,
@@ -85,7 +88,7 @@ test('Set conventional-changelog-writer context with package.json', async (t) =>
     commit: 'commit',
     packageData,
     linkReferences: undefined,
-  });
+  }));
 });
 
 test('Accept a "preset" option', async (t) => {
@@ -163,7 +166,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async (t) => {
         referenceActions: ['keyword'],
         issuePrefixes: ['#', 'JIRA-'],
       },
-      writerOpts: (await promisify(require('conventional-changelog-eslint'))()).writerOpts,
+      writerOpts: (await (promisify((await import('conventional-changelog-eslint')).default))()).writerOpts,
     },
     {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits}
   );

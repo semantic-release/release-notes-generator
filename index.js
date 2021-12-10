@@ -1,14 +1,16 @@
-const {format} = require('url');
-const {find, merge} = require('lodash');
-const getStream = require('get-stream');
-const intoStream = require('into-stream');
-const parser = require('conventional-commits-parser').sync;
-const writer = require('conventional-changelog-writer');
-const filter = require('conventional-commits-filter');
-const readPkgUp = require('read-pkg-up');
-const debug = require('debug')('semantic-release:release-notes-generator');
-const loadChangelogConfig = require('./lib/load-changelog-config.js');
-const HOSTS_CONFIG = require('./lib/hosts-config.js');
+import { format } from 'url';
+import { find, merge } from 'lodash-es';
+import getStream from 'get-stream';
+import intoStream from 'into-stream';
+import { sync as parser } from 'conventional-commits-parser';
+import writer from 'conventional-changelog-writer';
+import filter from 'conventional-commits-filter';
+import {readPackageUp} from 'read-pkg-up';
+import debugFactory from 'debug';
+import loadChangelogConfig from './lib/load-changelog-config.js';
+import HOSTS_CONFIG from './lib/hosts-config.js';
+
+const debug = debugFactory('semantic-release:release-notes-generator');
 
 /**
  * Generate the changelog for all the commits in `options.commits`.
@@ -26,7 +28,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config.js');
  *
  * @returns {String} The changelog for all the commits in `context.commits`.
  */
-async function generateNotes(pluginConfig, context) {
+export async function generateNotes(pluginConfig, context) {
   const {commits, lastRelease, nextRelease, options, cwd} = context;
   const repositoryUrl = options.repositoryUrl.replace(/\.git$/i, '');
   const {parserOpts, writerOpts} = await loadChangelogConfig(pluginConfig, context);
@@ -70,7 +72,7 @@ async function generateNotes(pluginConfig, context) {
       linkCompare: currentTag && previousTag,
       issue,
       commit,
-      packageData: ((await readPkgUp({normalize: false, cwd})) || {}).packageJson,
+      packageData: ((await readPackageUp({normalize: false, cwd})) || {}).packageJson,
     },
     {host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig}
   );
@@ -86,7 +88,6 @@ async function generateNotes(pluginConfig, context) {
   debug('issue: %o', changelogContext.issue);
   debug('commit: %o', changelogContext.commit);
 
+  console.log({writer})
   return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
 }
-
-module.exports = {generateNotes};
