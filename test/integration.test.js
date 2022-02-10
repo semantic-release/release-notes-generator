@@ -16,7 +16,7 @@ const repositoryUrl = `${host}/${owner}/${repository}`;
 const lastRelease = {gitTag: 'v1.0.0'};
 const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
 
-test('Use "conventional-changelog-angular" by default', async t => {
+test('Use "conventional-changelog-angular" by default', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -33,7 +33,7 @@ test('Use "conventional-changelog-angular" by default', async t => {
   );
 });
 
-test('Set conventional-changelog-writer context', async t => {
+test('Set conventional-changelog-writer context', async (t) => {
   const cwd = tempy.directory();
   const writer = spy(require('conventional-changelog-writer'));
   const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
@@ -59,7 +59,7 @@ test('Set conventional-changelog-writer context', async t => {
   });
 });
 
-test('Set conventional-changelog-writer context with package.json', async t => {
+test('Set conventional-changelog-writer context with package.json', async (t) => {
   const cwd = tempy.directory();
   const writer = spy(require('conventional-changelog-writer'));
   const {generateNotes} = proxyquire('..', {'conventional-changelog-writer': writer});
@@ -88,7 +88,7 @@ test('Set conventional-changelog-writer context with package.json', async t => {
   });
 });
 
-test('Accept a "preset" option', async t => {
+test('Accept a "preset" option', async (t) => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
@@ -119,7 +119,7 @@ test('Accept a "preset" option', async t => {
   );
 });
 
-test('Accept a "config" option', async t => {
+test('Accept a "config" option', async (t) => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
@@ -150,7 +150,7 @@ test('Accept a "config" option', async t => {
   );
 });
 
-test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
+test('Accept a "parseOpts" and "writerOpts" objects as option', async (t) => {
   const commits = [
     {hash: '111', message: '%%Fix%% First fix (keyword #123)'},
     {hash: '222', message: '%%Update%% Second feature (keyword JIRA-456)'},
@@ -189,7 +189,7 @@ test('Accept a "parseOpts" and "writerOpts" objects as option', async t => {
   );
 });
 
-test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t => {
+test('Accept a partial "parseOpts" and "writerOpts" objects as option', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): 2 First fix (fixes #123)'},
     {hash: '222', message: 'fix(scope2): 1 Second fix (fixes #456)'},
@@ -208,7 +208,7 @@ test('Accept a partial "parseOpts" and "writerOpts" objects as option', async t 
   t.regex(changelog, /\* \*\*scope2:\*\* 1 Second fix[\S\s]*\* \*\*scope1:\*\* 2 First fix/);
 });
 
-test('Accept a partial "presetConfig" object as option', async t => {
+test('Accept a partial "presetConfig" object as option', async (t) => {
   const commits = [
     {hash: '111', message: 'fix: First fix'},
     {hash: '222', message: 'test: Change test'},
@@ -232,7 +232,7 @@ test('Accept a partial "presetConfig" object as option', async t => {
   t.regex(changelog, new RegExp(escape('* Change test ([222](https://github.com/owner/repo/commit/222))')));
 });
 
-test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async t => {
+test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -258,7 +258,7 @@ test('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defi
   );
 });
 
-test('Accept a custom repository URL', async t => {
+test('Accept a custom repository URL', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -278,7 +278,7 @@ test('Accept a custom repository URL', async t => {
   );
 });
 
-test('Accept a custom repository URL with git format', async t => {
+test('Accept a custom repository URL with git format', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -298,7 +298,7 @@ test('Accept a custom repository URL with git format', async t => {
   );
 });
 
-test('Accept a custom repository URL with git format without user', async t => {
+test('Accept a custom repository URL with git format without user', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -318,7 +318,7 @@ test('Accept a custom repository URL with git format without user', async t => {
   );
 });
 
-test('Accept a custom repository URL with git+http format', async t => {
+test('Accept a custom repository URL with git+http format', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -338,7 +338,7 @@ test('Accept a custom repository URL with git+http format', async t => {
   );
 });
 
-test('Accept a custom repository URL with ".git" extension', async t => {
+test('Accept a custom repository URL with ".git" extension', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -361,7 +361,7 @@ test('Accept a custom repository URL with ".git" extension', async t => {
   );
 });
 
-test('Accept a custom repository URL with git+https format', async t => {
+test('Accept a custom repository URL with git+https format', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix\n\nresolve #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -388,7 +388,7 @@ test('Accept a custom repository URL with git+https format', async t => {
   );
 });
 
-test('Accept a custom repository URL with git+ssh format and custom port', async t => {
+test('Accept a custom repository URL with git+ssh format and custom port', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -408,7 +408,7 @@ test('Accept a custom repository URL with git+ssh format and custom port', async
   );
 });
 
-test('Accept a Bitbucket repository URL', async t => {
+test('Accept a Bitbucket repository URL', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix\n\nResolves #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -435,7 +435,7 @@ test('Accept a Bitbucket repository URL', async t => {
   );
 });
 
-test('Accept a Gitlab repository URL', async t => {
+test('Accept a Gitlab repository URL', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix\n\nclosed #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -462,7 +462,7 @@ test('Accept a Gitlab repository URL', async t => {
   );
 });
 
-test('Accept a "linkCompare" option', async t => {
+test('Accept a "linkCompare" option', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix\n\nResolves #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -476,7 +476,7 @@ test('Accept a "linkCompare" option', async t => {
   t.notRegex(changelog, new RegExp(escape('(https://bitbucket.org/owner/repo/compare/v1.0.0...v2.0.0)')));
 });
 
-test('Accept a "linkReferences" option', async t => {
+test('Accept a "linkReferences" option', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix\n\nResolves #10'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -492,7 +492,7 @@ test('Accept a "linkReferences" option', async t => {
   t.regex(changelog, new RegExp(escape('* **scope2:** Second feature 222')));
 });
 
-test('Accept a "host" option', async t => {
+test('Accept a "host" option', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -512,7 +512,7 @@ test('Accept a "host" option', async t => {
   );
 });
 
-test('Accept a "commit" option', async t => {
+test('Accept a "commit" option', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): Second feature'},
@@ -535,7 +535,7 @@ test('Accept a "commit" option', async t => {
   );
 });
 
-test('Accept an "issue" option', async t => {
+test('Accept an "issue" option', async (t) => {
   const commits = [{hash: '111', message: 'fix(scope1): First fix\n\nresolve #10'}];
   const changelog = await generateNotes(
     {issue: 'test-issues'},
@@ -554,7 +554,7 @@ test('Accept an "issue" option', async t => {
   );
 });
 
-test('Ignore malformatted commits and include valid ones', async t => {
+test('Ignore malformatted commits and include valid ones', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'Feature => Invalid message'},
@@ -567,7 +567,7 @@ test('Ignore malformatted commits and include valid ones', async t => {
   t.notRegex(changelog, /Feature => Invalid message/);
 });
 
-test('Exclude commits if they have a matching revert commits', async t => {
+test('Exclude commits if they have a matching revert commits', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: 'feat(scope2): First feature'},
@@ -582,7 +582,7 @@ test('Exclude commits if they have a matching revert commits', async t => {
   t.notRegex(changelog, /Second feature/);
 });
 
-test('Exclude commits with empty message', async t => {
+test('Exclude commits with empty message', async (t) => {
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
     {hash: '222', message: ''},
@@ -597,7 +597,7 @@ test('Exclude commits with empty message', async t => {
   t.notRegex(changelog, /333/);
 });
 
-test('Throw error if "preset" doesn`t exist', async t => {
+test('Throw error if "preset" doesn`t exist', async (t) => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
@@ -608,7 +608,7 @@ test('Throw error if "preset" doesn`t exist', async t => {
   );
 });
 
-test('Throw error if "config" doesn`t exist', async t => {
+test('Throw error if "config" doesn`t exist', async (t) => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},
@@ -619,7 +619,7 @@ test('Throw error if "config" doesn`t exist', async t => {
   );
 });
 
-test('ReThrow error from "conventional-changelog"', async t => {
+test('ReThrow error from "conventional-changelog"', async (t) => {
   const commits = [
     {hash: '111', message: 'Fix: First fix (fixes #123)'},
     {hash: '222', message: 'Update: Second feature (fixes #456)'},

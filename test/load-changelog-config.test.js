@@ -40,7 +40,7 @@ async function loadConfig(t, config, pluginOptions) {
 
 loadConfig.title = (providedTitle, config) => `${providedTitle} Load "${config}" config`.trim();
 
-test('Load "conventional-changelog-angular" by default', async t => {
+test('Load "conventional-changelog-angular" by default', async (t) => {
   const changelogConfig = await loadChangelogConfig({}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
 
@@ -48,7 +48,7 @@ test('Load "conventional-changelog-angular" by default', async t => {
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
-test('Accept a "parserOpts" object as option', async t => {
+test('Accept a "parserOpts" object as option', async (t) => {
   const customParserOptions = {
     headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
     headerCorrespondence: ['tag', 'shortDesc'],
@@ -62,7 +62,7 @@ test('Accept a "parserOpts" object as option', async t => {
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
-test('Accept a "writerOpts" object as option', async t => {
+test('Accept a "writerOpts" object as option', async (t) => {
   const customWriterOptions = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
   const changelogConfig = await loadChangelogConfig({writerOpts: customWriterOptions}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
@@ -73,7 +73,7 @@ test('Accept a "writerOpts" object as option', async t => {
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
 });
 
-test('Accept a partial "parserOpts" object as option that overwrite a preset', async t => {
+test('Accept a partial "parserOpts" object as option that overwrite a preset', async (t) => {
   const customParserOptions = {
     headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
     headerCorrespondence: ['tag', 'shortDesc'],
@@ -87,7 +87,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a preset', a
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
-test('Accept a "writerOpts" object as option that overwrite a preset', async t => {
+test('Accept a "writerOpts" object as option that overwrite a preset', async (t) => {
   const customWriterOptions = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
   const changelogConfig = await loadChangelogConfig({writerOpts: customWriterOptions, preset: 'angular'}, {cwd});
   const angularChangelogConfig = await require('conventional-changelog-angular');
@@ -98,7 +98,7 @@ test('Accept a "writerOpts" object as option that overwrite a preset', async t =
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
 });
 
-test('Accept a partial "parserOpts" object as option that overwrite a config', async t => {
+test('Accept a partial "parserOpts" object as option that overwrite a config', async (t) => {
   const customParserOptions = {
     headerPattern: /^##(?<tag>.*?)## (?<shortDesc>.*)$/,
     headerCorrespondence: ['tag', 'shortDesc'],
@@ -118,7 +118,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a config', a
   t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
-test('Accept a "writerOpts" object as option that overwrite a config', async t => {
+test('Accept a "writerOpts" object as option that overwrite a config', async (t) => {
   const customWriterOptions = {commitGroupsSort: 'title', commitsSort: ['scope', 'subject']};
   const changelogConfig = await loadChangelogConfig(
     {
@@ -150,10 +150,10 @@ test(loadConfig, 'jshint');
 test(loadPreset, 'conventionalcommits', {presetConfig: {}});
 test(loadConfig, 'conventionalcommits', {presetConfig: {}});
 
-test('Throw error if "config" doesn`t exist', async t => {
+test('Throw error if "config" doesn`t exist', async (t) => {
   await t.throwsAsync(loadChangelogConfig({config: 'unknown-config'}, {cwd}), {code: 'MODULE_NOT_FOUND'});
 });
 
-test('Throw error if "preset" doesn`t exist', async t => {
+test('Throw error if "preset" doesn`t exist', async (t) => {
   await t.throwsAsync(loadChangelogConfig({preset: 'unknown-preset'}, {cwd}), {code: 'MODULE_NOT_FOUND'});
 });

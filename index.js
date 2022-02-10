@@ -40,7 +40,7 @@ async function generateNotes(pluginConfig, context) {
   const [, owner, repository] = /^\/(?<owner>[^/]+)?\/?(?<repository>.+)?$/.exec(pathname);
 
   const {issue, commit, referenceActions, issuePrefixes} =
-    find(HOSTS_CONFIG, conf => conf.hostname === hostname) || HOSTS_CONFIG.default;
+    find(HOSTS_CONFIG, (conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
   const parsedCommits = filter(
     commits
       .filter(({message, hash}) => {
@@ -51,7 +51,7 @@ async function generateNotes(pluginConfig, context) {
 
         return true;
       })
-      .map(rawCommit => ({
+      .map((rawCommit) => ({
         ...rawCommit,
         ...parser(rawCommit.message, {referenceActions, issuePrefixes, ...parserOpts}),
       }))
