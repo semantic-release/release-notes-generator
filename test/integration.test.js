@@ -639,3 +639,23 @@ test('ReThrow error from "conventional-changelog"', async (t) => {
     {message: 'Test error'}
   );
 });
+
+test('Accept "header" file path option', async(t) => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): First feature'},
+  ];
+
+  const releaseNotes = await generateNotes({header: './test/testHeader.md'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+  t.regex(releaseNotes, /### Test Header/);
+})
+
+test('Accept "header" string option', async(t) => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): First feature'},
+  ];
+
+  const releaseNotes = await generateNotes({header: "### Test Header"}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+  t.regex(releaseNotes, /### Test Header/);
+})

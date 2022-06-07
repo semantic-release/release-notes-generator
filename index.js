@@ -1,3 +1,5 @@
+const fs = require('fs')
+const fspath = require('path')
 const {format} = require('url');
 const {find, merge} = require('lodash');
 const getStream = require('get-stream');
@@ -18,6 +20,7 @@ const HOSTS_CONFIG = require('./lib/hosts-config');
  * @param {String} pluginConfig.config Requierable npm package with a custom conventional-changelog preset
  * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
  * @param {Object} pluginConfig.writerOpts Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
+ * @param {String} pluginConfig.header Path to a text file appended to the head of the release notes.
  * @param {Object} context The semantic-release context.
  * @param {Array<Object>} context.commits The commits to analyze.
  * @param {Object} context.lastRelease The last release with `gitHead` corresponding to the commit hash used to make the last release and `gitTag` corresponding to the git tag associated with `gitHead`.
@@ -85,8 +88,21 @@ async function generateNotes(pluginConfig, context) {
   debug('linkReferences: %o', changelogContext.linkReferences);
   debug('issue: %o', changelogContext.issue);
   debug('commit: %o', changelogContext.commit);
+  
+  var res = await getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
+  
+  if('header' in pluginConfig) {
+    var headerOpt = pluginConfig['header'];
 
-  return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
+    if(headerOpt === fspath.basename(headerOpt)) {
+      res =  headerOpt + "\n" + res;
+    } else {
+      const header = fs.readFileSync(headerOpt, { encoding: 'utf8' });
+      res = header + "\n" + res;
+    }
+  }
+  
+  return res;
 }
 
 module.exports = {generateNotes};
