@@ -648,7 +648,7 @@ test('Accept "header" file path option', async(t) => {
 
   const releaseNotes = await generateNotes({header: './test/testHeader.md'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
   t.regex(releaseNotes, /### Test Header/);
-})
+});
 
 test('Accept "header" string option', async(t) => {
   const commits = [
@@ -658,4 +658,24 @@ test('Accept "header" string option', async(t) => {
 
   const releaseNotes = await generateNotes({header: "### Test Header"}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
   t.regex(releaseNotes, /### Test Header/);
-})
+});
+
+test('Accept "footer" file path option', async(t) => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): First feature'},
+  ];
+
+  const releaseNotes = await generateNotes({footer: './test/testHeader.md'}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits})
+  t.regex(releaseNotes, /### Test Header/);
+});
+
+test('Accept "footer" string option', async(t) => {
+  const commits = [
+    {hash: '111', message: 'fix(scope1): First fix'},
+    {hash: '222', message: 'feat(scope2): First feature'},
+  ];
+
+  const releaseNotes = await generateNotes({footer: "### Test Footer"}, {cwd, options: {repositoryUrl}, lastRelease, nextRelease, commits});
+  t.regex(releaseNotes, /### Test Footer/);
+});

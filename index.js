@@ -95,10 +95,21 @@ async function generateNotes(pluginConfig, context) {
     var headerOpt = pluginConfig['header'];
 
     if(headerOpt === fspath.basename(headerOpt)) {
-      res =  headerOpt + "\n" + res;
+      res =  headerOpt + '\n' + res;
     } else {
       const header = fs.readFileSync(headerOpt, { encoding: 'utf8' });
-      res = header + "\n" + res;
+      res = header + '\n' + res;
+    }
+  }
+
+  if('footer' in pluginConfig) {
+    var footerOpt = pluginConfig['footer'];
+
+    if(footerOpt === fspath.basename(footerOpt)) {
+      res = res + '\n' + footerOpt
+    } else {
+      const footer = fs.readFileSync(footerOpt, { encoding: 'utf8' });
+      res = res + '\n' + footer
     }
   }
   
