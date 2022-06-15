@@ -97,8 +97,10 @@ async function generateNotes(pluginConfig, context) {
     if(headerOpt === fspath.basename(headerOpt)) {
       res =  headerOpt + '\n' + res;
     } else {
-      const header = fs.readFileSync(headerOpt, { encoding: 'utf8' });
-      res = header + '\n' + res;
+      if(fs.existsSync(pluginConfig['header'])) {
+        const header = fs.readFileSync(headerOpt, { encoding: 'utf8' });
+        res = header + '\n' + res;
+      }
     }
   }
 
@@ -108,8 +110,10 @@ async function generateNotes(pluginConfig, context) {
     if(footerOpt === fspath.basename(footerOpt)) {
       res = res + '\n' + footerOpt
     } else {
-      const footer = fs.readFileSync(footerOpt, { encoding: 'utf8' });
-      res = res + '\n' + footer
+      if(fs.existsSync(pluginConfig['footer'])) {
+        const footer = fs.readFileSync(footerOpt, { encoding: 'utf8' });
+        res = res + '\n' + footer
+      }
     }
   }
   
