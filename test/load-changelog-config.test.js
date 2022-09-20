@@ -1,5 +1,5 @@
 const test = require('ava');
-const loadChangelogConfig = require('../lib/load-changelog-config');
+const loadChangelogConfig = require('../lib/load-changelog-config.js');
 
 const cwd = process.cwd();
 
