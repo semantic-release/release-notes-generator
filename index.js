@@ -9,8 +9,8 @@ const writer = require('conventional-changelog-writer');
 const filter = require('conventional-commits-filter');
 const readPkgUp = require('read-pkg-up');
 const debug = require('debug')('semantic-release:release-notes-generator');
-const loadChangelogConfig = require('./lib/load-changelog-config');
-const HOSTS_CONFIG = require('./lib/hosts-config');
+const loadChangelogConfig = require('./lib/load-changelog-config.js');
+const HOSTS_CONFIG = require('./lib/hosts-config.js');
 
 /**
  * Generate the changelog for all the commits in `options.commits`.
