@@ -2,7 +2,7 @@ import path from 'path';
 import test from 'ava';
 import fs from 'fs-extra';
 import escape from 'escape-string-regexp';
-import tempy from 'tempy';
+import {temporaryDirectory} from 'tempy';
 import * as td from 'testdouble';
 import { promisify } from 'node:util';
 
@@ -43,7 +43,7 @@ test('Use "conventional-changelog-angular" by default', async (t) => {
 });
 
 test('Set conventional-changelog-writer context', async (t) => {
-  const cwd = tempy.directory();
+  const cwd = temporaryDirectory();
 
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
@@ -67,7 +67,7 @@ test('Set conventional-changelog-writer context', async (t) => {
 });
 
 test('Set conventional-changelog-writer context with package.json', async (t) => {
-  const cwd = tempy.directory();
+  const cwd = temporaryDirectory();
 
   const packageData = {name: 'package', version: '0.0.0'};
   await fs.outputJson(path.resolve(cwd, 'package.json'), packageData);
