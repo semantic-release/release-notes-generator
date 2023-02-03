@@ -4,7 +4,6 @@ import fs from 'fs-extra';
 import escape from 'escape-string-regexp';
 import tempy from 'tempy';
 import * as td from 'testdouble';
-import { generateNotes } from '../index.js';
 import { promisify } from 'node:util';
 
 const cwd = process.cwd();
@@ -14,6 +13,13 @@ const repository = 'repo';
 const repositoryUrl = `${host}/${owner}/${repository}`;
 const lastRelease = {gitTag: 'v1.0.0'};
 const nextRelease = {gitTag: 'v2.0.0', version: '2.0.0'};
+
+let generateNotes, writer;
+
+test.beforeEach(async () => {
+  (writer = await td.replaceEsm('../wrappers/conventional-changelog-writer.js'));
+  ({generateNotes} = await import('../index.js'));
+});
 
 test.afterEach(() => {
   td.reset();
@@ -38,8 +44,6 @@ test('Use "conventional-changelog-angular" by default', async (t) => {
 
 test('Set conventional-changelog-writer context', async (t) => {
   const cwd = tempy.directory();
-  const writer = td.replace('conventional-changelog-writer');
-  const {generateNotes} = await import('../index.js');
 
   const commits = [
     {hash: '111', message: 'fix(scope1): First fix'},
@@ -64,8 +68,6 @@ test('Set conventional-changelog-writer context', async (t) => {
 
 test('Set conventional-changelog-writer context with package.json', async (t) => {
   const cwd = tempy.directory();
-  const writer = await td.replaceEsm('conventional-changelog-writer');
-  const {generateNotes} = await import('../index.js');
 
   const packageData = {name: 'package', version: '0.0.0'};
   await fs.outputJson(path.resolve(cwd, 'package.json'), packageData);
