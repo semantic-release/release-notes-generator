@@ -37,7 +37,7 @@
     "semantic-release": "20.1.0",
     "sinon": "15.0.1",
     "tempy": "1.0.1",
-    "xo": "0.39.1"
+    "xo": "0.53.1"
   },
   "engines": {
     "node": ">=14.17"
