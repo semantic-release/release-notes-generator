@@ -32,8 +32,8 @@
     "conventional-changelog-express": "2.0.6",
     "conventional-changelog-jshint": "2.0.9",
     "escape-string-regexp": "5.0.0",
-    "fs-extra": "^11.1.0",
-    "semantic-release": "20.1.0",
+    "fs-extra": "11.1.0",
+    "semantic-release": "21.0.1",
     "stream-buffers": "3.0.2",
     "tempy": "^3.0.0",
     "testdouble": "3.16.8",
@@ -79,7 +79,8 @@
     "trailingComma": "es5"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
