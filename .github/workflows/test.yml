@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 14.17
-          - 16
+          - 18.0.0
+          - 19
         os:
           - ubuntu-latest
     runs-on: "${{ matrix.os }}"
