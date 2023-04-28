@@ -33,11 +33,11 @@
     "conventional-changelog-jshint": "2.0.9",
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.1.0",
+    "prettier": "2.8.8",
     "semantic-release": "21.0.1",
     "stream-buffers": "3.0.2",
     "tempy": "^3.0.0",
-    "testdouble": "3.16.8",
-    "xo": "0.39.1"
+    "testdouble": "3.16.8"
   },
   "engines": {
     "node": ">=18"
@@ -87,7 +87,8 @@
     "url": "https://github.com/semantic-release/release-notes-generator.git"
   },
   "scripts": {
-    "lint": "xo",
+    "lint": "prettier --check \"*.{js,json,md}\" \".github/**/*.{md,yml}\" \"{bin,lib,test}/*.js\"",
+    "lint:fix": "prettier --write \"*.{js,json,md}\" \".github/**/*.{md,yml}\" \"{bin,lib,test}/*.js\"",
     "pretest": "npm run lint",
     "semantic-release": "semantic-release",
     "test": "c8 ava -v",
@@ -99,13 +100,6 @@
       "--loader=testdouble",
       "--no-warnings"
     ]
-  },
-  "xo": {
-    "prettier": true,
-    "space": true,
-    "rules": {
-      "unicorn/string-content": "off"
-    }
   },
   "renovate": {
     "extends": [
