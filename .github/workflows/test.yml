@@ -25,7 +25,9 @@ jobs:
         with:
           node-version: "${{ matrix.node-version }}"
           cache: npm
-      - run: npm ci
+      - run: npm clean-install
+      - name: Ensure dependencies are compatible with the engines range
+        run: npx ls-engines
       - run: "npm run test:ci"
   test:
     runs-on: ubuntu-latest
@@ -34,9 +36,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: lts/*
           cache: npm
-      - run: npm ci
-      - name: Ensure dependencies are compatible with the engines range
-        run: npx ls-engines
+      - run: npm clean-install
+      - run: npm audit signatures
       - run: npm run lint
