@@ -44,6 +44,7 @@
   },
   "files": [
     "lib",
+    "wrappers",
     "index.js"
   ],
   "homepage": "https://github.com/semantic-release/release-notes-generator#readme",
