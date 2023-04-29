@@ -37,7 +37,7 @@
     "semantic-release": "21.0.2",
     "stream-buffers": "3.0.2",
     "tempy": "3.0.0",
-    "testdouble": "3.16.8"
+    "testdouble": "3.17.2"
   },
   "engines": {
     "node": ">=18"
