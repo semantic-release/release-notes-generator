@@ -41,7 +41,7 @@ export async function generateNotes(pluginConfig, context) {
   protocol = protocol && /http[^s]/.test(protocol) ? "http" : "https";
   const [, owner, repository] = /^\/(?<owner>[^/]+)?\/?(?<repository>.+)?$/.exec(pathname);
 
-  const { issue, commit, referenceActions, issuePrefixes } =
+  const { issue, commit, referenceActions, issuePrefixes, repositoryPathSuffix } =
     find(HOSTS_CONFIG, (conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
   const parsedCommits = filter(
     commits
@@ -66,7 +66,7 @@ export async function generateNotes(pluginConfig, context) {
       version: nextRelease.version,
       host: format({ protocol, hostname, port }),
       owner,
-      repository,
+      repository: repositoryPathSuffix ? `${repository}${repositoryPathSuffix}` : repository,
       previousTag,
       currentTag,
       linkCompare: currentTag && previousTag,
