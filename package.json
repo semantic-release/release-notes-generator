@@ -29,7 +29,7 @@
     "conventional-changelog-conventionalcommits": "6.0.0",
     "conventional-changelog-ember": "3.0.0",
     "conventional-changelog-eslint": "4.0.0",
-    "conventional-changelog-express": "2.0.6",
+    "conventional-changelog-express": "3.0.0",
     "conventional-changelog-jshint": "2.0.9",
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.1.0",
