@@ -34,7 +34,7 @@
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.1.1",
     "prettier": "2.8.8",
-    "semantic-release": "21.0.5",
+    "semantic-release": "21.0.6",
     "stream-buffers": "3.0.2",
     "tempy": "3.0.0",
     "testdouble": "3.18.0"
