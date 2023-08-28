@@ -42,3 +42,9 @@ jobs:
       - run: npm clean-install
       - run: npm audit signatures
       - run: npm run lint
+      - name: All matrix versions passed
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some matrix version failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
