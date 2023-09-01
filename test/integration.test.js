@@ -6,6 +6,7 @@ import escape from "escape-string-regexp";
 import { temporaryDirectory } from "tempy";
 import * as td from "testdouble";
 import streamBuffers from "stream-buffers";
+import conventionalChangelogEslint from "conventional-changelog-eslint";
 
 const cwd = process.cwd();
 const host = "https://github.com";
@@ -178,7 +179,7 @@ test.serial('Accept a "parseOpts" and "writerOpts" objects as option', async (t)
         referenceActions: ["keyword"],
         issuePrefixes: ["#", "JIRA-"],
       },
-      writerOpts: (await promisify((await import("conventional-changelog-eslint")).default)()).writerOpts,
+      writerOpts: (await conventionalChangelogEslint()).writerOpts,
     },
     { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
   );
