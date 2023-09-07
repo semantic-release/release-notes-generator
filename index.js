@@ -1,5 +1,6 @@
+import micromatch from "micromatch";
 import { format } from "url";
-import { find, merge } from "lodash-es";
+import { find, isMatchWith, isString, merge } from "lodash-es";
 import getStream from "get-stream";
 import intoStream from "into-stream";
 import { sync as parser } from "conventional-commits-parser";
@@ -20,6 +21,7 @@ const debug = debugFactory("semantic-release:release-notes-generator");
  * @param {String} pluginConfig.config Requireable npm package with a custom conventional-changelog preset
  * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
  * @param {Object} pluginConfig.writerOpts Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
+ * @param {Array<Object>} pluginConfig.hideRules `Array` of rules.
  * @param {Object} context The semantic-release context.
  * @param {Array<Object>} context.commits The commits to analyze.
  * @param {Object} context.lastRelease The last release with `gitHead` corresponding to the commit hash used to make the last release and `gitTag` corresponding to the git tag associated with `gitHead`.
@@ -43,15 +45,27 @@ export async function generateNotes(pluginConfig, context) {
 
   const { issue, commit, referenceActions, issuePrefixes } =
     find(HOSTS_CONFIG, (conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
+  const {
+    host: hostConfig,
+    linkCompare,
+    linkReferences,
+    commit: commitConfig,
+    issue: issueConfig,
+    hideRules = [],
+  } = pluginConfig;
   const parsedCommits = filter(
     commits
-      .filter(({ message, hash }) => {
-        if (!message.trim()) {
-          debug("Skip commit %s with empty message", hash);
+      .filter((currentCommit) => {
+        if (!currentCommit.message.trim()) {
+          debug("Skip commit %s with empty message", currentCommit.hash);
           return false;
         }
 
-        return true;
+        return !hideRules.some((rule) =>
+          isMatchWith(currentCommit, rule, (object, src) =>
+            isString(src) && isString(object) ? micromatch.isMatch(object, src) : undefined
+          )
+        );
       })
       .map((rawCommit) => ({
         ...rawCommit,
@@ -60,7 +74,6 @@ export async function generateNotes(pluginConfig, context) {
   );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
-  const { host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig } = pluginConfig;
   const changelogContext = merge(
     {
       version: nextRelease.version,

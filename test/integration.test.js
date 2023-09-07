@@ -298,6 +298,32 @@ test.serial("Accept a custom repository URL", async (t) => {
   );
 });
 
+test.serial('Accept "hideRules" option', async (t) => {
+  const { generateNotes } = await import("../index.js");
+  const commits = [
+    { hash: "111", message: "fix(scope1): First fix" },
+    { hash: "222", message: "feat(scope2): Second feature" },
+  ];
+  const changelog = await generateNotes(
+    {
+      hideRules: [{ message: "*scope1*" }],
+    },
+    { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
+  );
+
+  t.regex(changelog, new RegExp(escape("(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)")));
+  t.notRegex(changelog, /### Bug Fixes/);
+  t.notRegex(
+    changelog,
+    new RegExp(escape("* **scope1:** First fix ([111](https://github.com/owner/repo/commit/111))"))
+  );
+  t.regex(changelog, /### Features/);
+  t.regex(
+    changelog,
+    new RegExp(escape("* **scope2:** Second feature ([222](https://github.com/owner/repo/commit/222))"))
+  );
+});
+
 test.serial("Accept a custom repository URL with git format", async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
