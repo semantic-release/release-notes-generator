@@ -610,9 +610,9 @@ test.serial("Ignore malformatted commits and include valid ones", async (t) => {
 test.serial("Exclude commits if they have a matching revert commits", async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
-    { hash: "111", message: "fix(scope1): First fix" },
-    { hash: "222", message: "feat(scope2): First feature" },
     { hash: "333", message: "revert: feat(scope2): First feature\n\nThis reverts commit 222.\n" },
+    { hash: "222", message: "feat(scope2): First feature" },
+    { hash: "111", message: "fix(scope1): First fix" },
   ];
   const changelog = await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
 
