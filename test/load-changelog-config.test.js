@@ -5,6 +5,21 @@ import loadChangelogConfig from "../lib/load-changelog-config.js";
 const cwd = process.cwd();
 
 /**
+ * assertion to compare loaded writerOpts with the expected writerOpts from the angular preset
+ *
+ * @param {Object} t AVA assertion library.
+ * @param {Object} loadedWriterOpts
+ * @param {Object} angularPresetWriterOpts
+ */
+function assertWriterOptsAreFromAngularPreset(t, loadedWriterOpts, angularPresetWriterOpts) {
+  const { transform: loadedTransform, ...loadedWriterOptsWithoutTransform } = loadedWriterOpts;
+  const { transform: angularPresetTransform, ...angularPresetWriterOptsWithoutTransform } = angularPresetWriterOpts;
+
+  t.deepEqual(loadedWriterOptsWithoutTransform, angularPresetWriterOptsWithoutTransform);
+  t.is(loadedTransform.toString(), angularPresetTransform.toString());
+}
+
+/**
  * AVA macro to verify that `loadChangelogConfig` return a config object with parserOpts and writerOpts.
  *
  * @method loadPreset
@@ -46,7 +61,7 @@ test('Load "conventional-changelog-angular" by default', async (t) => {
   const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "parserOpts" object as option', async (t) => {
@@ -60,7 +75,7 @@ test('Accept a "parserOpts" object as option', async (t) => {
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parserOpts.noteKeywords);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option', async (t) => {
@@ -85,7 +100,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a preset', a
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a preset', async (t) => {
@@ -116,7 +131,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a config', a
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a config', async (t) => {
