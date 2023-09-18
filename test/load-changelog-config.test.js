@@ -1,7 +1,23 @@
 import test from "ava";
+import conventionalChangelogAngular from "conventional-changelog-angular";
 import loadChangelogConfig from "../lib/load-changelog-config.js";
 
 const cwd = process.cwd();
+
+/**
+ * assertion to compare loaded writerOpts with the expected writerOpts from the angular preset
+ *
+ * @param {Object} t AVA assertion library.
+ * @param {Object} loadedWriterOpts
+ * @param {Object} angularPresetWriterOpts
+ */
+function assertWriterOptsAreFromAngularPreset(t, loadedWriterOpts, angularPresetWriterOpts) {
+  const { transform: loadedTransform, ...loadedWriterOptsWithoutTransform } = loadedWriterOpts;
+  const { transform: angularPresetTransform, ...angularPresetWriterOptsWithoutTransform } = angularPresetWriterOpts;
+
+  t.deepEqual(loadedWriterOptsWithoutTransform, angularPresetWriterOptsWithoutTransform);
+  t.is(loadedTransform.toString(), angularPresetTransform.toString());
+}
 
 /**
  * AVA macro to verify that `loadChangelogConfig` return a config object with parserOpts and writerOpts.
@@ -42,10 +58,10 @@ loadConfig.title = (providedTitle, config) => `${providedTitle} Load "${config}"
 
 test('Load "conventional-changelog-angular" by default', async (t) => {
   const changelogConfig = await loadChangelogConfig({}, { cwd });
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "parserOpts" object as option', async (t) => {
@@ -54,18 +70,18 @@ test('Accept a "parserOpts" object as option', async (t) => {
     headerCorrespondence: ["tag", "shortDesc"],
   };
   const changelogConfig = await loadChangelogConfig({ parserOpts: customParserOptions }, { cwd });
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parserOpts.noteKeywords);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option', async (t) => {
   const customWriterOptions = { commitGroupsSort: "title", commitsSort: ["scope", "subject"] };
   const changelogConfig = await loadChangelogConfig({ writerOpts: customWriterOptions }, { cwd });
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
@@ -79,18 +95,18 @@ test('Accept a partial "parserOpts" object as option that overwrite a preset', a
     headerCorrespondence: ["tag", "shortDesc"],
   };
   const changelogConfig = await loadChangelogConfig({ parserOpts: customParserOptions, preset: "angular" }, { cwd });
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a preset', async (t) => {
   const customWriterOptions = { commitGroupsSort: "title", commitsSort: ["scope", "subject"] };
   const changelogConfig = await loadChangelogConfig({ writerOpts: customWriterOptions, preset: "angular" }, { cwd });
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
@@ -110,12 +126,12 @@ test('Accept a partial "parserOpts" object as option that overwrite a config', a
     },
     { cwd }
   );
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  t.deepEqual(changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a config', async (t) => {
@@ -127,7 +143,7 @@ test('Accept a "writerOpts" object as option that overwrite a config', async (t)
     },
     { cwd }
   );
-  const angularChangelogConfig = await (await import("conventional-changelog-angular")).default;
+  const angularChangelogConfig = await conventionalChangelogAngular();
 
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);

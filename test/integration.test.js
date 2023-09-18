@@ -6,6 +6,7 @@ import escape from "escape-string-regexp";
 import { temporaryDirectory } from "tempy";
 import * as td from "testdouble";
 import streamBuffers from "stream-buffers";
+import conventionalChangelogEslint from "conventional-changelog-eslint";
 
 const cwd = process.cwd();
 const host = "https://github.com";
@@ -178,7 +179,7 @@ test.serial('Accept a "parseOpts" and "writerOpts" objects as option', async (t)
         referenceActions: ["keyword"],
         issuePrefixes: ["#", "JIRA-"],
       },
-      writerOpts: (await promisify((await import("conventional-changelog-eslint")).default)()).writerOpts,
+      writerOpts: (await conventionalChangelogEslint()).writerOpts,
     },
     { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
   );
@@ -609,9 +610,9 @@ test.serial("Ignore malformatted commits and include valid ones", async (t) => {
 test.serial("Exclude commits if they have a matching revert commits", async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
-    { hash: "111", message: "fix(scope1): First fix" },
-    { hash: "222", message: "feat(scope2): First feature" },
     { hash: "333", message: "revert: feat(scope2): First feature\n\nThis reverts commit 222.\n" },
+    { hash: "222", message: "feat(scope2): First feature" },
+    { hash: "111", message: "fix(scope1): First fix" },
   ];
   const changelog = await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
 
