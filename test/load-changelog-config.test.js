@@ -1,4 +1,7 @@
 import test from "ava";
+import importFrom from "import-from-esm";
+import sinon from "sinon";
+
 import conventionalChangelogAngular from "conventional-changelog-angular";
 import loadChangelogConfig from "../lib/load-changelog-config.js";
 
@@ -172,4 +175,13 @@ test('Throw error if "config" doesn`t exist', async (t) => {
 
 test('Throw error if "preset" doesn`t exist', async (t) => {
   await t.throwsAsync(loadChangelogConfig({ preset: "unknown-preset" }, { cwd }), { code: "MODULE_NOT_FOUND" });
+});
+
+test.serial("Load preset and config correctly when importFrom.silent fails", async (t) => {
+  sinon.stub(importFrom, "silent").returns(undefined);
+
+  await loadPreset(t, "angular");
+  await loadConfig(t, "angular");
+
+  sinon.restore();
 });
