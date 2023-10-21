@@ -17,7 +17,7 @@
     "conventional-commits-parser": "^5.0.0",
     "debug": "^4.0.0",
     "get-stream": "^7.0.0",
-    "import-from-esm": "^1.0.0",
+    "import-from-esm": "^1.0.2",
     "into-stream": "^7.0.0",
     "lodash-es": "^4.17.21",
     "read-pkg-up": "^11.0.0"
