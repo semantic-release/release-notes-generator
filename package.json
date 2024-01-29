@@ -23,7 +23,7 @@
     "read-pkg-up": "^11.0.0"
   },
   "devDependencies": {
-    "ava": "6.1.0",
+    "ava": "6.1.1",
     "c8": "9.1.0",
     "conventional-changelog-atom": "4.0.0",
     "conventional-changelog-conventionalcommits": "7.0.2",
