@@ -33,7 +33,7 @@
     "conventional-changelog-jshint": "4.0.0",
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.2.0",
-    "prettier": "3.2.4",
+    "prettier": "3.2.5",
     "semantic-release": "23.0.0",
     "sinon": "17.0.1",
     "stream-buffers": "3.0.2",
