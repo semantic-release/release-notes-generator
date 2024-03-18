@@ -2,6 +2,7 @@
   "name": "@tweeat/release-notes-generator",
   "description": "tweeat plugin to generate changelog content with conventional-changelog",
   "version": "1.0.0",
+  "type": "module",
   "author": "Gert-Jan Naaktgeboren",
   "bugs": {
     "url": "https://github.com/Gert-Jan2AT/release-notes-generator/issues"
