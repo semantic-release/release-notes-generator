@@ -1,15 +1,11 @@
 {
-  "name": "@semantic-release/release-notes-generator",
-  "description": "semantic-release plugin to generate changelog content with conventional-changelog",
-  "version": "0.0.0-development",
-  "author": "Pierre Vanduynslager (https://twitter.com/@pvdlg_)",
+  "name": "@tweeat/release-notes-generator",
+  "description": "tweeat plugin to generate changelog content with conventional-changelog",
+  "version": "1.0.0",
+  "author": "Gert-Jan Naaktgeboren",
   "bugs": {
-    "url": "https://github.com/semantic-release/release-notes-generator/issues"
+    "url": "https://github.com/Gert-Jan2AT/release-notes-generator/issues"
   },
-  "contributors": [
-    "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
-    "Gregor Martynus (https://twitter.com/gr2m)"
-  ],
   "dependencies": {
     "conventional-changelog-angular": "^7.0.0",
     "conventional-changelog-writer": "^7.0.0",
@@ -48,7 +44,7 @@
     "wrappers",
     "index.js"
   ],
-  "homepage": "https://github.com/semantic-release/release-notes-generator#readme",
+  "homepage": "https://github.com/Gert-Jan2AT/release-notes-generator#readme",
   "keywords": [
     "changelog",
     "conventional-changelog",
@@ -86,7 +82,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/semantic-release/release-notes-generator.git"
+    "url": "https://github.com/Gert-Jan2AT/release-notes-generator.git"
   },
   "scripts": {
     "lint": "prettier --check \"*.{js,json,md}\" \".github/**/*.{md,yml}\" \"{bin,lib,test}/*.js\"",
