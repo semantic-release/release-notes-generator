@@ -64,7 +64,8 @@
     "semantic-release"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "./index.js",
+  "exports": "./index.js",
   "c8": {
     "include": [
       "lib/**/*.js",
