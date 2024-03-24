@@ -33,7 +33,11 @@
     "conventional-changelog-jshint": "4.0.0",
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.2.0",
+    "lockfile-lint": "4.13.2",
+    "ls-engines": "0.9.1",
+    "npm-run-all2": "6.1.2",
     "prettier": "3.2.5",
+    "publint": "0.2.7",
     "semantic-release": "23.0.2",
     "sinon": "17.0.1",
     "stream-buffers": "3.0.2",
@@ -41,7 +45,7 @@
     "testdouble": "3.20.2"
   },
   "engines": {
-    "node": "^18.17 || >=20.6.1"
+    "node": ">=20.8.1"
   },
   "files": [
     "lib",
@@ -60,7 +64,8 @@
     "semantic-release"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "./index.js",
+  "exports": "./index.js",
   "c8": {
     "include": [
       "lib/**/*.js",
@@ -76,6 +81,14 @@
   "peerDependencies": {
     "semantic-release": ">=20.1.0"
   },
+  "lockfile-lint": {
+    "path": "package-lock.json",
+    "type": "npm",
+    "validate-https": true,
+    "allowed-hosts": [
+      "npm"
+    ]
+  },
   "prettier": {
     "printWidth": 120,
     "trailingComma": "es5"
@@ -89,15 +102,21 @@
     "url": "https://github.com/semantic-release/release-notes-generator.git"
   },
   "scripts": {
-    "lint": "prettier --check \"*.{js,json,md}\" \".github/**/*.{md,yml}\" \"{bin,lib,test}/*.js\"",
-    "lint:fix": "prettier --write \"*.{js,json,md}\" \".github/**/*.{md,yml}\" \"{bin,lib,test}/*.js\"",
-    "pretest": "npm run lint",
-    "semantic-release": "semantic-release",
-    "test": "c8 ava --verbose",
-    "test:ci": "c8 ava --verbose"
+    "lint:prettier": "prettier --check \"{lib,test}/**/*.{js,json,ts}\" \"*.{md,json,js}\" \".github/**/*.yml\"",
+    "lint:prettier:fix": "prettier --write \"*.{js,json,md}\" \".github/**/*.{md,yml}\" \"{bin,lib,test}/**/*.js\"",
+    "lint:lockfile": "lockfile-lint",
+    "lint:engines": "ls-engines",
+    "lint:publish": "publint --strict",
+    "test": "npm-run-all --print-label --parallel lint:* --parallel test:*",
+    "test:unit": "c8 ava --verbose",
+    "test:integration": "ava --verbose test/integration.test.js"
   },
   "type": "module",
   "ava": {
+    "files": [
+      "test/**/*.test.js",
+      "!test/integration.test.js"
+    ],
     "nodeArguments": [
       "--loader=testdouble",
       "--no-warnings"
@@ -107,5 +126,6 @@
     "extends": [
       "github>semantic-release/.github:renovate-config"
     ]
-  }
+  },
+  "packageManager": "npm@10.5.0+sha256.17ca6e08e7633b624e8f870db81a78f46afe119de62bcaf0a7407574139198fc"
 }
