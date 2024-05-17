@@ -20,7 +20,7 @@ const debug = debugFactory("semantic-release:release-notes-generator");
  * @param {String} pluginConfig.config Requireable npm package with a custom conventional-changelog preset
  * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
  * @param {Object} pluginConfig.writerOpts Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
- * @param {Object} context The semantic-release context.
+ * @param {Object} pluginConfig.regexRemove Optional regular that will be used to clean up de message in the commit. For example to remove the Merged PR xxxx: part from a devops commit*  * @param {Object} context The semantic-release context.
  * @param {Array<Object>} context.commits The commits to analyze.
  * @param {Object} context.lastRelease The last release with `gitHead` corresponding to the commit hash used to make the last release and `gitTag` corresponding to the git tag associated with `gitHead`.
  * @param {Object} context.nextRelease The next release with `gitHead` corresponding to the commit hash used to make the  release, the release `version` and `gitTag` corresponding to the git tag associated with `gitHead`.
@@ -55,7 +55,7 @@ export async function generateNotes(pluginConfig, context) {
       })
       .map((rawCommit) => ({
         ...rawCommit,
-        ...parser(rawCommit.message, { referenceActions, issuePrefixes, ...parserOpts }),
+        ...parser(pluginConfig.regexRemove ? rawCommit.message.replace(new RegExp(pluginConfig.regexRemove), "") : rawCommit.message, { referenceActions, issuePrefixes, ...parserOpts }),
       }))
   );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
