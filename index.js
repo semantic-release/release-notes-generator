@@ -2,9 +2,9 @@ import { format } from "url";
 import { find, merge } from "lodash-es";
 import getStream from "get-stream";
 import intoStream from "into-stream";
-import { sync as parser } from "conventional-commits-parser";
+import { CommitParser } from "conventional-commits-parser";
 import writer from "./wrappers/conventional-changelog-writer.js";
-import filter from "conventional-commits-filter";
+import { filterRevertedCommitsSync } from "conventional-commits-filter";
 import { readPackageUp } from "read-pkg-up";
 import debugFactory from "debug";
 import loadChangelogConfig from "./lib/load-changelog-config.js";
@@ -43,7 +43,8 @@ export async function generateNotes(pluginConfig, context) {
 
   const { issue, commit, referenceActions, issuePrefixes } =
     find(HOSTS_CONFIG, (conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
-  const parsedCommits = filter(
+  const parser = new CommitParser({ referenceActions, issuePrefixes, ...parserOpts });
+  const parsedCommits = filterRevertedCommitsSync(
     commits
       .filter(({ message, hash }) => {
         if (!message.trim()) {
@@ -55,7 +56,7 @@ export async function generateNotes(pluginConfig, context) {
       })
       .map((rawCommit) => ({
         ...rawCommit,
-        ...parser(rawCommit.message, { referenceActions, issuePrefixes, ...parserOpts }),
+        ...parser.parse(rawCommit.message),
       }))
   );
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;

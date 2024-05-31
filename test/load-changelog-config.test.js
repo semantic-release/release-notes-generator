@@ -63,8 +63,8 @@ test('Load "conventional-changelog-angular" by default', async (t) => {
   const changelogConfig = await loadChangelogConfig({}, { cwd });
   const angularChangelogConfig = await conventionalChangelogAngular();
 
-  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parser);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
 });
 
 test('Accept a "parserOpts" object as option', async (t) => {
@@ -77,8 +77,8 @@ test('Accept a "parserOpts" object as option', async (t) => {
 
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
-  t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parserOpts.noteKeywords);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parser.noteKeywords);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
 });
 
 test('Accept a "writerOpts" object as option', async (t) => {
@@ -88,8 +88,8 @@ test('Accept a "writerOpts" object as option', async (t) => {
 
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
-  t.deepEqual(changelogConfig.writerOpts.noteGroupsSort, angularChangelogConfig.writerOpts.noteGroupsSort);
-  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
+  t.deepEqual(changelogConfig.writerOpts.noteGroupsSort, angularChangelogConfig.writer.noteGroupsSort);
+  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parser);
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a preset', async (t) => {
@@ -103,7 +103,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a preset', a
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a preset', async (t) => {
@@ -114,7 +114,7 @@ test('Accept a "writerOpts" object as option that overwrite a preset', async (t)
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
   t.truthy(changelogConfig.writerOpts.noteGroupsSort);
-  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
+  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parser);
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a config', async (t) => {
@@ -134,7 +134,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a config', a
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writerOpts);
+  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a config', async (t) => {
@@ -151,7 +151,7 @@ test('Accept a "writerOpts" object as option that overwrite a config', async (t)
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
   t.truthy(changelogConfig.writerOpts.noteGroupsSort);
-  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parserOpts);
+  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parser);
 });
 
 test(loadPreset, "angular");

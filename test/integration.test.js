@@ -1,4 +1,3 @@
-import { promisify } from "node:util";
 import path from "node:path";
 import test from "ava";
 import fs from "fs-extra";
@@ -179,7 +178,7 @@ test.serial('Accept a "parseOpts" and "writerOpts" objects as option', async (t)
         referenceActions: ["keyword"],
         issuePrefixes: ["#", "JIRA-"],
       },
-      writerOpts: (await conventionalChangelogEslint()).writerOpts,
+      writerOpts: (await conventionalChangelogEslint()).writer,
     },
     { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
   );
@@ -610,15 +609,18 @@ test.serial("Ignore malformatted commits and include valid ones", async (t) => {
 test.serial("Exclude commits if they have a matching revert commits", async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
-    { hash: "333", message: "revert: feat(scope2): First feature\n\nThis reverts commit 222.\n" },
-    { hash: "222", message: "feat(scope2): First feature" },
-    { hash: "111", message: "fix(scope1): First fix" },
+    { hash: "df012f1", message: "revert: feat(scope2): First feature\n\nThis reverts commit df012f2.\n" },
+    { hash: "df012f2", message: "feat(scope2): First feature" },
+    { hash: "df012f3", message: "fix(scope1): First fix" },
   ];
   const changelog = await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
 
   t.regex(changelog, new RegExp(escape("(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)")));
   t.regex(changelog, /### Bug Fixes/);
-  t.regex(changelog, new RegExp(escape("* **scope1:** First fix ([111](https://github.com/owner/repo/commit/111))")));
+  t.regex(
+    changelog,
+    new RegExp(escape("* **scope1:** First fix ([df012f3](https://github.com/owner/repo/commit/df012f3))"))
+  );
   t.notRegex(changelog, /### Features/);
   t.notRegex(changelog, /Second feature/);
 });
