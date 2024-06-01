@@ -37,7 +37,7 @@
     "ls-engines": "0.9.1",
     "npm-run-all2": "6.1.2",
     "prettier": "3.2.5",
-    "publint": "0.2.7",
+    "publint": "0.2.8",
     "semantic-release": "23.0.8",
     "sinon": "17.0.1",
     "stream-buffers": "3.0.2",
