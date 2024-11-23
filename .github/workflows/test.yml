@@ -22,7 +22,7 @@ jobs:
       matrix:
         node-version:
           - 20.8.1
-          - 21
+          - 22.0.0
         os:
           - ubuntu-latest
     runs-on: "${{ matrix.os }}"
