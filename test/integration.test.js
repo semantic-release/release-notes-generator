@@ -688,6 +688,7 @@ test.serial('ReThrow error from "conventional-changelog"', async (t) => {
 });
 
 test("Accept a custom AWS CodeCommit repository URL", async (t) => {
+  const { generateNotes } = await import("../index.js");
   const commits = [
     { hash: "111", message: "fix(scope1): First fix" },
     { hash: "222", message: "feat(scope2): Second feature" },
