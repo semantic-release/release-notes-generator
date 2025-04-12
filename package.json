@@ -39,7 +39,7 @@
     "prettier": "3.5.3",
     "publint": "0.3.11",
     "semantic-release": "24.2.3",
-    "sinon": "19.0.5",
+    "sinon": "20.0.0",
     "stream-buffers": "3.0.3",
     "tempy": "3.1.0",
     "testdouble": "3.20.2"
