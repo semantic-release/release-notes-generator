@@ -1,5 +1,5 @@
 import { format } from "url";
-import { find, merge } from "lodash-es";
+import { defu } from "defu";
 import getStream from "get-stream";
 import intoStream from "into-stream";
 import { CommitParser } from "conventional-commits-parser";
@@ -42,7 +42,7 @@ export async function generateNotes(pluginConfig, context) {
   const [, owner, repository] = /^\/(?<owner>[^/]+)?\/?(?<repository>.+)?$/.exec(pathname) || [];
 
   const { issue, commit, referenceActions, issuePrefixes } =
-    find(HOSTS_CONFIG, (conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
+    Object.values(HOSTS_CONFIG).find((conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
   const parser = new CommitParser({ referenceActions, issuePrefixes, ...parserOpts });
   const parsedCommits = filterRevertedCommitsSync(
     commits
@@ -62,21 +62,19 @@ export async function generateNotes(pluginConfig, context) {
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const { host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig } = pluginConfig;
-  const changelogContext = merge(
-    {
-      version: nextRelease.version,
-      host: format({ protocol, hostname, port }),
-      owner,
-      repository,
-      previousTag,
-      currentTag,
-      linkCompare: currentTag && previousTag,
-      issue,
-      commit,
-      packageData: ((await readPackageUp({ normalize: false, cwd })) || {}).packageJson,
-    },
-    { host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig }
-  );
+  const changelogContext = {
+    version: nextRelease.version,
+    host: hostConfig ?? format({ protocol, hostname, port }),
+    owner,
+    repository,
+    previousTag,
+    currentTag,
+    linkCompare: linkCompare ?? (currentTag && previousTag),
+    linkReferences,
+    issue: issueConfig ?? issue,
+    commit: commitConfig ?? commit,
+    packageData: ((await readPackageUp({ normalize: false, cwd })) || {}).packageJson,
+  };
 
   debug("version: %o", changelogContext.version);
   debug("host: %o", changelogContext.hostname);
