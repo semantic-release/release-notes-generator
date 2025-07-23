@@ -1,11 +1,12 @@
 import { format } from "url";
+import { readFile } from "fs/promises";
 import { find, merge } from "lodash-es";
 import getStream from "get-stream";
 import intoStream from "into-stream";
 import { CommitParser } from "conventional-commits-parser";
 import writer from "./wrappers/conventional-changelog-writer.js";
 import { filterRevertedCommitsSync } from "conventional-commits-filter";
-import { readPackageUp } from "read-package-up";
+import { up as findPackageUp } from "empathic/package";
 import debugFactory from "debug";
 import loadChangelogConfig from "./lib/load-changelog-config.js";
 import HOSTS_CONFIG from "./lib/hosts-config.js";
@@ -62,6 +63,15 @@ export async function generateNotes(pluginConfig, context) {
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
   const { host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig } = pluginConfig;
+  const packageJsonPath = findPackageUp({ cwd });
+  let packageJson = undefined;
+  if (packageJsonPath !== undefined) {
+    try {
+      packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+    } catch {
+      // can't read it, leave the default
+    }
+  }
   const changelogContext = merge(
     {
       version: nextRelease.version,
@@ -73,7 +83,7 @@ export async function generateNotes(pluginConfig, context) {
       linkCompare: currentTag && previousTag,
       issue,
       commit,
-      packageData: ((await readPackageUp({ normalize: false, cwd })) || {}).packageJson,
+      packageData: packageJson,
     },
     { host: hostConfig, linkCompare, linkReferences, commit: commitConfig, issue: issueConfig }
   );
