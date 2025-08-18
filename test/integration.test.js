@@ -249,6 +249,32 @@ test.serial('Accept a partial "presetConfig" object as option', async (t) => {
   t.regex(changelog, new RegExp(escape("* Change test ([222](https://github.com/owner/repo/commit/222))")));
 });
 
+test.serial('Accept ignoreCommits in "presetConfig" object as option', async (t) => {
+  const { generateNotes } = await import("../index.js");
+  const commits = [
+    { hash: "111", message: "fix: First fix" },
+    { hash: "222", message: "test: Change test [python]" },
+  ];
+  const changelog = await generateNotes(
+    {
+      preset: "conventionalcommits",
+      presetConfig: {
+        ignoreCommits: '\\[python\\]',
+        types: [
+          { type: "fix", section: "Bug Fixes", hidden: false },
+          { type: "test", section: "Test !!", hidden: false },
+        ],
+      },
+    },
+    { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
+  );
+
+  t.regex(changelog, /### Bug Fixes/);
+  t.regex(changelog, new RegExp(escape("First fix")));
+  t.notRegex(changelog, /### Test !!/);
+  t.notRegex(changelog, new RegExp(escape("* Change test ([222](https://github.com/owner/repo/commit/222))")));
+});
+
 test.serial('Use "gitHead" from "lastRelease" and "nextRelease" if "gitTag" is not defined', async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
