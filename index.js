@@ -43,7 +43,7 @@ export async function generateNotes(pluginConfig, context) {
 
   const { issue, commit, referenceActions, issuePrefixes } =
     find(HOSTS_CONFIG, (conf) => conf.hostname === hostname) || HOSTS_CONFIG.default;
-  const parser = new CommitParser({ referenceActions, issuePrefixes, ...parserOpts});
+  const parser = new CommitParser({ referenceActions, issuePrefixes, ...parserOpts });
   const parsedCommits = filterRevertedCommitsSync(
     commits
       .filter(({ message, hash }) => {
@@ -52,7 +52,7 @@ export async function generateNotes(pluginConfig, context) {
           return false;
         }
 
-        if(commitOpts && commitOpts.ignore && new RegExp(commitOpts.ignore).test(message) && !commitOpts.merges){
+        if (commitOpts && commitOpts.ignore && new RegExp(commitOpts.ignore).test(message) && !commitOpts.merges) {
           debug("Skip commit %s by ignore option", hash);
           return false;
         }

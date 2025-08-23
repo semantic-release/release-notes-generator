@@ -259,7 +259,7 @@ test.serial('Accept ignoreCommits in "presetConfig" object as option', async (t)
     {
       preset: "conventionalcommits",
       presetConfig: {
-        ignoreCommits: '\\[python\\]',
+        ignoreCommits: "\\[python\\]",
         types: [
           { type: "fix", section: "Bug Fixes", hidden: false },
           { type: "test", section: "Test !!", hidden: false },
