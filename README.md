@@ -80,5 +80,3 @@ With this example:
 **Note**: Individual properties of `parserOpts` and `writerOpts` will override ones loaded with an explicitly set `preset` or `config`. If `preset` or `config` are not set, only the properties set in `parserOpts` and `writerOpts` will be used.
 
 **Note**: For presets that expects a configuration object, such as [`conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits), the `presetConfig` option **must** be set.
-
-**Note**: `ignoreCommits` is a supported option within `presetConfig` option when [`conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits#specific-options) preset is used.
