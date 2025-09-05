@@ -31,7 +31,7 @@ const debug = debugFactory("semantic-release:release-notes-generator");
 export async function generateNotes(pluginConfig, context) {
   const { commits, lastRelease, nextRelease, options, cwd } = context;
   const repositoryUrl = options.repositoryUrl.replace(/\.git$/i, "");
-  const { parserOpts, writerOpts } = await loadChangelogConfig(pluginConfig, context);
+  const { commitOpts, parserOpts, writerOpts } = await loadChangelogConfig(pluginConfig, context);
 
   const [match, auth, host, path] = /^(?!.+:\/\/)(?:(?<auth>.*)@)?(?<host>.*?):(?<path>.*)$/.exec(repositoryUrl) || [];
   let { hostname, port, pathname, protocol } = new URL(
@@ -49,6 +49,11 @@ export async function generateNotes(pluginConfig, context) {
       .filter(({ message, hash }) => {
         if (!message.trim()) {
           debug("Skip commit %s with empty message", hash);
+          return false;
+        }
+
+        if (commitOpts && commitOpts.ignore && new RegExp(commitOpts.ignore).test(message) && !commitOpts.merges) {
+          debug("Skip commit %s by ignore option", hash);
           return false;
         }
 
