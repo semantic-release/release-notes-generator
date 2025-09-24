@@ -504,20 +504,20 @@ test.serial("Accept a Gitlab repository URL", async (t) => {
     { cwd, options: { repositoryUrl: "git+https://gitlab.com/owner/repo" }, lastRelease, nextRelease, commits }
   );
 
-  t.regex(changelog, new RegExp(escape("(https://gitlab.com/owner/repo/compare/v1.0.0...v2.0.0)")));
+  t.regex(changelog, new RegExp(escape("(https://gitlab.com/owner/repo/-/compare/v1.0.0...v2.0.0)")));
   t.regex(changelog, /### Bug Fixes/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* **scope1:** First fix ([111](https://gitlab.com/owner/repo/commit/111)), closes [#10](https://gitlab.com/owner/repo/issues/10)"
+        "* **scope1:** First fix ([111](https://gitlab.com/owner/repo/-/commit/111)), closes [#10](https://gitlab.com/owner/repo/-/issues/10)"
       )
     )
   );
   t.regex(changelog, /### Features/);
   t.regex(
     changelog,
-    new RegExp(escape("* **scope2:** Second feature ([222](https://gitlab.com/owner/repo/commit/222))"))
+    new RegExp(escape("* **scope2:** Second feature ([222](https://gitlab.com/owner/repo/-/commit/222))"))
   );
 });
 
