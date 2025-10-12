@@ -19,7 +19,6 @@
     "get-stream": "^7.0.0",
     "import-from-esm": "^2.0.0",
     "into-stream": "^7.0.0",
-    "lodash-es": "^4.17.21",
     "read-package-up": "^11.0.0"
   },
   "devDependencies": {
