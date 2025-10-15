@@ -94,5 +94,11 @@ export async function generateNotes(pluginConfig, context) {
   debug("issue: %o", changelogContext.issue);
   debug("commit: %o", changelogContext.commit);
 
-  return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
+  const stream = intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts));  
+
+  const changeLogContent = await stream.toArray();
+
+  return changeLogContent.join('');
+
+  // return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
 }
