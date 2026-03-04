@@ -30,7 +30,7 @@
     "conventional-changelog-ember": "5.0.0",
     "conventional-changelog-eslint": "6.0.0",
     "conventional-changelog-express": "5.0.0",
-    "conventional-changelog-jshint": "5.0.0",
+    "conventional-changelog-jshint": "5.1.0",
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.3.3",
     "lockfile-lint": "5.0.0",
