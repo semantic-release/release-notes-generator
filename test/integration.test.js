@@ -4,7 +4,6 @@ import fs from "fs-extra";
 import escape from "escape-string-regexp";
 import { temporaryDirectory } from "tempy";
 import * as td from "testdouble";
-import streamBuffers from "stream-buffers";
 import conventionalChangelogEslint from "conventional-changelog-eslint";
 
 const cwd = process.cwd();
@@ -38,25 +37,8 @@ test.serial('Use "conventional-changelog-angular" by default', async (t) => {
 });
 
 test.serial("Set conventional-changelog-writer context", async (t) => {
-  t.plan(0);
   const cwd = temporaryDirectory();
   const writerDouble = td.func();
-  td.when(
-    writerDouble({
-      version: nextRelease.version,
-      host,
-      owner,
-      repository,
-      previousTag: lastRelease.gitTag,
-      currentTag: nextRelease.gitTag,
-      linkCompare: lastRelease.gitTag,
-      issue: "issues",
-      commit: "commit",
-      packageData: undefined,
-      linkReferences: undefined,
-    }),
-    { ignoreExtraArgs: true }
-  ).thenReturn(new streamBuffers.WritableStreamBuffer());
   await td.replaceEsm("../wrappers/conventional-changelog-writer.js", {}, writerDouble);
   const { generateNotes } = await import("../index.js");
 
@@ -65,29 +47,33 @@ test.serial("Set conventional-changelog-writer context", async (t) => {
     { hash: "222", message: "feat(scope2): Second feature" },
   ];
   await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
+
+  td.verify(
+    writerDouble(
+      td.matchers.anything(),
+      {
+        version: nextRelease.version,
+        host,
+        owner,
+        repository,
+        previousTag: lastRelease.gitTag,
+        currentTag: nextRelease.gitTag,
+        linkCompare: lastRelease.gitTag,
+        issue: "issues",
+        commit: "commit",
+        packageData: undefined,
+        linkReferences: undefined,
+      },
+      td.matchers.anything()
+    )
+  );
+  t.pass();
 });
 
 test.serial("Set conventional-changelog-writer context with package.json", async (t) => {
-  t.plan(0);
   const cwd = temporaryDirectory();
   const packageData = { name: "package", version: "0.0.0" };
   const writerDouble = td.func();
-  td.when(
-    writerDouble({
-      version: nextRelease.version,
-      host,
-      owner,
-      repository,
-      previousTag: lastRelease.gitTag,
-      currentTag: nextRelease.gitTag,
-      linkCompare: lastRelease.gitTag,
-      issue: "issues",
-      commit: "commit",
-      packageData,
-      linkReferences: undefined,
-    }),
-    { ignoreExtraArgs: true }
-  ).thenReturn(new streamBuffers.WritableStreamBuffer());
   await td.replaceEsm("../wrappers/conventional-changelog-writer.js", {}, writerDouble);
   const { generateNotes } = await import("../index.js");
 
@@ -98,6 +84,27 @@ test.serial("Set conventional-changelog-writer context with package.json", async
     { hash: "222", message: "feat(scope2): Second feature" },
   ];
   await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
+
+  td.verify(
+    writerDouble(
+      td.matchers.anything(),
+      {
+        version: nextRelease.version,
+        host,
+        owner,
+        repository,
+        previousTag: lastRelease.gitTag,
+        currentTag: nextRelease.gitTag,
+        linkCompare: lastRelease.gitTag,
+        issue: "issues",
+        commit: "commit",
+        packageData,
+        linkReferences: undefined,
+      },
+      td.matchers.anything()
+    )
+  );
+  t.pass();
 });
 
 test.serial('Accept a "preset" option', async (t) => {

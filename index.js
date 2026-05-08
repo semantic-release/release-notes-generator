@@ -1,7 +1,5 @@
 import { format } from "url";
 import { find, merge } from "lodash-es";
-import getStream from "get-stream";
-import intoStream from "into-stream";
 import { CommitParser } from "conventional-commits-parser";
 import writer from "./wrappers/conventional-changelog-writer.js";
 import { filterRevertedCommitsSync } from "conventional-commits-filter";
@@ -94,5 +92,5 @@ export async function generateNotes(pluginConfig, context) {
   debug("issue: %o", changelogContext.issue);
   debug("commit: %o", changelogContext.commit);
 
-  return getStream(intoStream.object(parsedCommits).pipe(writer(changelogContext, writerOpts)));
+  return writer(parsedCommits, changelogContext, writerOpts);
 }
