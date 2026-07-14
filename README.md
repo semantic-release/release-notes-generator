@@ -56,6 +56,52 @@ With this example:
 - the commits that contains `BREAKING CHANGE`, `BREAKING CHANGES` or `BREAKING` in their body will be considered breaking changes (by default the [angular preset](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/index.js#L14) checks only for `BREAKING CHANGE` and `BREAKING CHANGES`)
 - the commits will be sorted in the changelog by `subject` then `scope` (by default the [angular preset](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/index.js#L90) sort the commits in the changelog by `scope` then `subject`)
 
+### Include additional commit types in release notes
+
+`@semantic-release/commit-analyzer` and `@semantic-release/release-notes-generator` use their own configuration. Adding a
+commit type to `releaseRules` can make that commit trigger a release, but it does not automatically add a matching section
+to the generated release notes.
+
+To use the `conventionalcommits` preset and show additional commit types such as `docs`, `refactor`, or `chore`, install the
+preset package and configure `presetConfig.types` for `@semantic-release/release-notes-generator`:
+
+```bash
+$ npm install conventional-changelog-conventionalcommits -D
+```
+
+```json
+{
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "docs", "release": "patch" },
+          { "type": "refactor", "release": "patch" },
+          { "type": "chore", "release": "patch" }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            { "type": "feat", "section": "Features" },
+            { "type": "fix", "section": "Bug Fixes" },
+            { "type": "docs", "section": "Documentation" },
+            { "type": "refactor", "section": "Code Refactoring" },
+            { "type": "chore", "section": "Chores" }
+          ]
+        }
+      }
+    ]
+  ]
+}
+```
+
 ## Configuration
 
 ### Options
