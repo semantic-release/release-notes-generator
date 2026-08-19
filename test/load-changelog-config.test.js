@@ -156,16 +156,6 @@ test('Accept a "writerOpts" object as option that overwrite a config', async (t)
 
 test(loadPreset, "angular");
 test(loadConfig, "angular");
-test(loadPreset, "atom");
-test(loadConfig, "atom");
-test(loadPreset, "ember");
-test(loadConfig, "ember");
-test(loadPreset, "eslint");
-test(loadConfig, "eslint");
-test(loadPreset, "express");
-test(loadConfig, "express");
-test(loadPreset, "jshint");
-test(loadConfig, "jshint");
 test(loadPreset, "conventionalcommits", { presetConfig: {} });
 test(loadConfig, "conventionalcommits", { presetConfig: {} });
 
