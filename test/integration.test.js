@@ -4,7 +4,7 @@ import fs from "fs-extra";
 import escape from "escape-string-regexp";
 import { temporaryDirectory } from "tempy";
 import * as td from "testdouble";
-import conventionalChangelogEslint from "conventional-changelog-eslint";
+import conventionalChangelogAngular from "conventional-changelog-angular";
 
 const cwd = process.cwd();
 const host = "https://github.com";
@@ -110,30 +110,30 @@ test.serial("Set conventional-changelog-writer context with package.json", async
 test.serial('Accept a "preset" option', async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
-    { hash: "111", message: "Fix: First fix (fixes #123)" },
-    { hash: "222", message: "Update: Second feature (fixes #456)" },
+    { hash: "111", message: "fix: First fix (fixes #123)" },
+    { hash: "222", message: "feat: Second feature (fixes #456)" },
   ];
   const changelog = await generateNotes(
-    { preset: "eslint" },
+    { preset: "conventionalcommits" },
     { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
   );
 
   t.regex(changelog, new RegExp(escape("(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)")));
-  t.regex(changelog, /### Fix/);
+  t.regex(changelog, /### Bug Fixes/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* First fix (fixes #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)"
+        "* First fix (fixes [#123](https://github.com/owner/repo/issues/123)) ([111](https://github.com/owner/repo/commit/111))"
       )
     )
   );
-  t.regex(changelog, /### Update/);
+  t.regex(changelog, /### Features/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* Second feature (fixes #456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)"
+        "* Second feature (fixes [#456](https://github.com/owner/repo/issues/456)) ([222](https://github.com/owner/repo/commit/222))"
       )
     )
   );
@@ -142,30 +142,30 @@ test.serial('Accept a "preset" option', async (t) => {
 test.serial('Accept a "config" option', async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
-    { hash: "111", message: "Fix: First fix (fixes #123)" },
-    { hash: "222", message: "Update: Second feature (fixes #456)" },
+    { hash: "111", message: "fix: First fix (fixes #123)" },
+    { hash: "222", message: "feat: Second feature (fixes #456)" },
   ];
   const changelog = await generateNotes(
-    { config: "conventional-changelog-eslint" },
+    { config: "conventional-changelog-conventionalcommits" },
     { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
   );
 
   t.regex(changelog, new RegExp(escape("(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)")));
-  t.regex(changelog, /### Fix/);
+  t.regex(changelog, /### Bug Fixes/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* First fix (fixes #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)"
+        "* First fix (fixes [#123](https://github.com/owner/repo/issues/123)) ([111](https://github.com/owner/repo/commit/111))"
       )
     )
   );
-  t.regex(changelog, /### Update/);
+  t.regex(changelog, /### Features/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* Second feature (fixes #456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)"
+        "* Second feature (fixes [#456](https://github.com/owner/repo/issues/456)) ([222](https://github.com/owner/repo/commit/222))"
       )
     )
   );
@@ -174,38 +174,38 @@ test.serial('Accept a "config" option', async (t) => {
 test.serial('Accept a "parseOpts" and "writerOpts" objects as option', async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
-    { hash: "111", message: "%%Fix%% First fix (keyword #123)" },
-    { hash: "222", message: "%%Update%% Second feature (keyword JIRA-456)" },
+    { hash: "111", message: "%%fix%% First fix (keyword #123)" },
+    { hash: "222", message: "%%feat%% Second feature (keyword JIRA-456)" },
   ];
   const changelog = await generateNotes(
     {
       parserOpts: {
-        headerPattern: /^%%(?<tag>.*?)%% (?<message>.*)$/,
-        headerCorrespondence: ["tag", "message"],
+        headerPattern: /^%%(.*?)%% (.*)$/,
+        headerCorrespondence: ["type", "subject"],
         referenceActions: ["keyword"],
         issuePrefixes: ["#", "JIRA-"],
       },
-      writerOpts: (await conventionalChangelogEslint()).writer,
+      writerOpts: (await conventionalChangelogAngular()).writer,
     },
     { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
   );
 
   t.regex(changelog, new RegExp(escape("(https://github.com/owner/repo/compare/v1.0.0...v2.0.0)")));
-  t.regex(changelog, /### Fix/);
+  t.regex(changelog, /### Bug Fixes/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* First fix (keyword #123) ([111](https://github.com/owner/repo/commit/111)), closes [#123](https://github.com/owner/repo/issues/123)"
+        "* First fix (keyword [#123](https://github.com/owner/repo/issues/123)) ([111](https://github.com/owner/repo/commit/111))"
       )
     )
   );
-  t.regex(changelog, /### Update/);
+  t.regex(changelog, /### Features/);
   t.regex(
     changelog,
     new RegExp(
       escape(
-        "* Second feature (keyword JIRA-456) ([222](https://github.com/owner/repo/commit/222)), closes [#456](https://github.com/owner/repo/issues/456)"
+        "* Second feature (keyword JIRA-456) ([222](https://github.com/owner/repo/commit/222)), closes [JIRA-456](https://github.com/owner/repo/issues/456)"
       )
     )
   );
@@ -242,8 +242,8 @@ test.serial('Accept a partial "presetConfig" object as option', async (t) => {
       preset: "conventionalcommits",
       presetConfig: {
         types: [
-          { type: "fix", section: "Bug Fixes", hidden: true },
-          { type: "test", section: "Test !!", hidden: false },
+          { type: "fix", section: "Bug Fixes", effect: "hidden" },
+          { type: "test", section: "Test !!" },
         ],
       },
     },
@@ -268,8 +268,8 @@ test.serial('Accept ignoreCommits in "presetConfig" object as option', async (t)
       presetConfig: {
         ignoreCommits: "\\[python\\]",
         types: [
-          { type: "fix", section: "Bug Fixes", hidden: false },
-          { type: "test", section: "Test !!", hidden: false },
+          { type: "fix", section: "Bug Fixes" },
+          { type: "test", section: "Test !!" },
         ],
       },
     },
