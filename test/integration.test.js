@@ -36,6 +36,18 @@ test.serial('Use "conventional-changelog-conventionalcommits" by default', async
   );
 });
 
+test.serial("Use the `!` marker for breaking changes", async (t) => {
+  const { generateNotes } = await import("../index.js");
+  const commits = [{ hash: "333", message: "feat(scope)!: Breaking feature" }];
+  const changelog = await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
+
+  t.regex(changelog, /### .*BREAKING CHANGES/);
+  t.regex(
+    changelog,
+    new RegExp(escape("* **scope:** Breaking feature ([333](https://github.com/owner/repo/commit/333))"))
+  );
+});
+
 test.serial("Set conventional-changelog-writer context", async (t) => {
   const cwd = temporaryDirectory();
   const writerDouble = td.func();
