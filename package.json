@@ -11,7 +11,7 @@
     "Gregor Martynus (https://twitter.com/gr2m)"
   ],
   "dependencies": {
-    "conventional-changelog-angular": "^9.0.0",
+    "conventional-changelog-conventionalcommits": "10.3.0",
     "conventional-changelog-writer": "^9.0.0",
     "conventional-commits-filter": "^6.0.0",
     "conventional-commits-parser": "^7.0.0",
@@ -23,7 +23,7 @@
   "devDependencies": {
     "ava": "6.4.1",
     "c8": "11.0.0",
-    "conventional-changelog-conventionalcommits": "10.3.0",
+    "conventional-changelog-angular": "^9.0.0",
     "escape-string-regexp": "5.0.0",
     "fs-extra": "11.3.6",
     "lockfile-lint": "5.0.0",
