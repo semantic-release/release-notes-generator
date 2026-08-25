@@ -18,7 +18,7 @@ test.afterEach.always(() => {
   td.reset();
 });
 
-test.serial('Use "conventional-changelog-angular" by default', async (t) => {
+test.serial('Use "conventional-changelog-conventionalcommits" by default', async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
     { hash: "111", message: "fix(scope1): First fix" },

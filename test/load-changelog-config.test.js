@@ -3,23 +3,30 @@ import importFrom from "import-from-esm";
 import sinon from "sinon";
 
 import conventionalChangelogAngular from "conventional-changelog-angular";
+import conventionalChangelogConventionalcommits from "conventional-changelog-conventionalcommits";
 import loadChangelogConfig from "../lib/load-changelog-config.js";
 
 const cwd = process.cwd();
 
 /**
- * assertion to compare loaded writerOpts with the expected writerOpts from the angular preset
+ * assertion to compare loaded writerOpts with the expected writerOpts from a preset
  *
  * @param {Object} t AVA assertion library.
  * @param {Object} loadedWriterOpts
- * @param {Object} angularPresetWriterOpts
+ * @param {Object} expectedWriterOpts
  */
-function assertWriterOptsAreFromAngularPreset(t, loadedWriterOpts, angularPresetWriterOpts) {
+function assertWriterOptsMatch(t, loadedWriterOpts, expectedWriterOpts) {
   const { transform: loadedTransform, ...loadedWriterOptsWithoutTransform } = loadedWriterOpts;
-  const { transform: angularPresetTransform, ...angularPresetWriterOptsWithoutTransform } = angularPresetWriterOpts;
+  const { transform: expectedTransform, ...expectedWriterOptsWithoutTransform } = expectedWriterOpts;
 
-  t.deepEqual(loadedWriterOptsWithoutTransform, angularPresetWriterOptsWithoutTransform);
-  t.is(loadedTransform.toString(), angularPresetTransform.toString());
+  for (const key of Object.keys(loadedWriterOptsWithoutTransform)) {
+    if (typeof loadedWriterOptsWithoutTransform[key] === "function") {
+      t.is(loadedWriterOptsWithoutTransform[key].toString(), expectedWriterOptsWithoutTransform[key].toString());
+    } else {
+      t.deepEqual(loadedWriterOptsWithoutTransform[key], expectedWriterOptsWithoutTransform[key]);
+    }
+  }
+  t.is(loadedTransform.toString(), expectedTransform.toString());
 }
 
 /**
@@ -59,12 +66,12 @@ async function loadConfig(t, config, pluginOptions) {
 
 loadConfig.title = (providedTitle, config) => `${providedTitle} Load "${config}" config`.trim();
 
-test('Load "conventional-changelog-angular" by default', async (t) => {
+test('Load "conventional-changelog-conventionalcommits" by default', async (t) => {
   const changelogConfig = await loadChangelogConfig({}, { cwd });
-  const angularChangelogConfig = await conventionalChangelogAngular();
+  const conventionalcommitsChangelogConfig = await conventionalChangelogConventionalcommits();
 
-  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parser);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
+  t.deepEqual(changelogConfig.parserOpts, conventionalcommitsChangelogConfig.parser);
+  assertWriterOptsMatch(t, changelogConfig.writerOpts, conventionalcommitsChangelogConfig.writer);
 });
 
 test('Accept a "parserOpts" object as option', async (t) => {
@@ -73,23 +80,23 @@ test('Accept a "parserOpts" object as option', async (t) => {
     headerCorrespondence: ["tag", "shortDesc"],
   };
   const changelogConfig = await loadChangelogConfig({ parserOpts: customParserOptions }, { cwd });
-  const angularChangelogConfig = await conventionalChangelogAngular();
+  const conventionalcommitsChangelogConfig = await conventionalChangelogConventionalcommits();
 
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
-  t.deepEqual(changelogConfig.parserOpts.noteKeywords, angularChangelogConfig.parser.noteKeywords);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
+  t.deepEqual(changelogConfig.parserOpts.noteKeywords, conventionalcommitsChangelogConfig.parser.noteKeywords);
+  assertWriterOptsMatch(t, changelogConfig.writerOpts, conventionalcommitsChangelogConfig.writer);
 });
 
 test('Accept a "writerOpts" object as option', async (t) => {
   const customWriterOptions = { commitGroupsSort: "title", commitsSort: ["scope", "subject"] };
   const changelogConfig = await loadChangelogConfig({ writerOpts: customWriterOptions }, { cwd });
-  const angularChangelogConfig = await conventionalChangelogAngular();
+  const conventionalcommitsChangelogConfig = await conventionalChangelogConventionalcommits();
 
   t.is(customWriterOptions.commitGroupsSort, changelogConfig.writerOpts.commitGroupsSort);
   t.deepEqual(customWriterOptions.commitsSort, changelogConfig.writerOpts.commitsSort);
-  t.deepEqual(changelogConfig.writerOpts.noteGroupsSort, angularChangelogConfig.writer.noteGroupsSort);
-  t.deepEqual(changelogConfig.parserOpts, angularChangelogConfig.parser);
+  t.deepEqual(changelogConfig.writerOpts.noteGroupsSort, conventionalcommitsChangelogConfig.writer.noteGroupsSort);
+  t.deepEqual(changelogConfig.parserOpts, conventionalcommitsChangelogConfig.parser);
 });
 
 test('Accept a partial "parserOpts" object as option that overwrite a preset', async (t) => {
@@ -103,7 +110,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a preset', a
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
+  assertWriterOptsMatch(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a preset', async (t) => {
@@ -134,7 +141,7 @@ test('Accept a partial "parserOpts" object as option that overwrite a config', a
   t.is(customParserOptions.headerPattern, changelogConfig.parserOpts.headerPattern);
   t.deepEqual(customParserOptions.headerCorrespondence, changelogConfig.parserOpts.headerCorrespondence);
   t.truthy(changelogConfig.parserOpts.noteKeywords);
-  assertWriterOptsAreFromAngularPreset(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
+  assertWriterOptsMatch(t, changelogConfig.writerOpts, angularChangelogConfig.writer);
 });
 
 test('Accept a "writerOpts" object as option that overwrite a config', async (t) => {
