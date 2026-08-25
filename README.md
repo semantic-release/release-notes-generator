@@ -29,7 +29,8 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
     [
       "@semantic-release/commit-analyzer",
       {
-        "preset": "angular",
+        "preset": "conventionalcommits",
+        "presetConfig": {},
         "parserOpts": {
           "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
         }
@@ -38,7 +39,8 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
     [
       "@semantic-release/release-notes-generator",
       {
-        "preset": "angular",
+        "preset": "conventionalcommits",
+        "presetConfig": {},
         "parserOpts": {
           "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
         },
@@ -53,8 +55,8 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
 
 With this example:
 
-- the commits that contains `BREAKING CHANGE`, `BREAKING CHANGES` or `BREAKING` in their body will be considered breaking changes (by default the [angular preset](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/index.js#L14) checks only for `BREAKING CHANGE` and `BREAKING CHANGES`)
-- the commits will be sorted in the changelog by `subject` then `scope` (by default the [angular preset](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-angular/index.js#L90) sort the commits in the changelog by `scope` then `subject`)
+- commits such as `feat(scope)!: change the API` will be considered breaking changes, as well as commits that contain `BREAKING CHANGE`, `BREAKING CHANGES` or `BREAKING` in their body
+- the commits will be sorted in the changelog by `subject` then `scope` (the [conventionalcommits preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits) sorts commits by `scope` then `subject` by default)
 
 ## Configuration
 
