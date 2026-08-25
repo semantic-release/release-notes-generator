@@ -21,7 +21,7 @@ $ npm install @semantic-release/release-notes-generator -D
 
 ## Usage
 
-The plugin can be configured in the [**semantic-release** configuration file](https://github.com/semantic-release/semantic-release/blob/master/docs/usage/configuration.md#configuration):
+The plugin can be configured in the [**semantic-release** configuration file](https://semantic-release.org/usage/configuration#configuration-file):
 
 ```json
 {
