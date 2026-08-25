@@ -18,7 +18,7 @@ test.afterEach.always(() => {
   td.reset();
 });
 
-test.serial('Use "conventional-changelog-angular" by default', async (t) => {
+test.serial('Use "conventional-changelog-conventionalcommits" by default', async (t) => {
   const { generateNotes } = await import("../index.js");
   const commits = [
     { hash: "111", message: "fix(scope1): First fix" },
@@ -33,6 +33,18 @@ test.serial('Use "conventional-changelog-angular" by default', async (t) => {
   t.regex(
     changelog,
     new RegExp(escape("* **scope2:** Second feature ([222](https://github.com/owner/repo/commit/222))"))
+  );
+});
+
+test.serial("Use the `!` marker for breaking changes", async (t) => {
+  const { generateNotes } = await import("../index.js");
+  const commits = [{ hash: "333", message: "feat(scope)!: Breaking feature" }];
+  const changelog = await generateNotes({}, { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits });
+
+  t.regex(changelog, /### .*BREAKING CHANGES/);
+  t.regex(
+    changelog,
+    new RegExp(escape("* **scope:** Breaking feature ([333](https://github.com/owner/repo/commit/333))"))
   );
 });
 
