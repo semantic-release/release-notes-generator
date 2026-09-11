@@ -14,7 +14,7 @@ const debug = debugFactory("semantic-release:release-notes-generator");
  * Generate the changelog for all the commits in `options.commits`.
  *
  * @param {Object} pluginConfig The plugin configuration.
- * @param {String} pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint').
+ * @param {String} pluginConfig.preset conventional-changelog preset ('angular', 'conventionalcommits').
  * @param {String} pluginConfig.config Requireable npm package with a custom conventional-changelog preset
  * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
  * @param {Object} pluginConfig.writerOpts Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
