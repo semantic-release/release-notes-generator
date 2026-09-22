@@ -177,6 +177,15 @@ test('Throw error if "preset" doesn`t exist', async (t) => {
   await t.throwsAsync(loadChangelogConfig({ preset: "unknown-preset" }, { cwd }), { code: "MODULE_NOT_FOUND" });
 });
 
+test('Load "conventional-changelog-conventionalcommits-v10" config with the new render-function writer template', async (t) => {
+  const changelogConfig = await loadChangelogConfig(
+    { config: "conventional-changelog-conventionalcommits-v10", presetConfig: {} },
+    { cwd }
+  );
+
+  t.is(typeof changelogConfig.writerOpts.template, "function");
+});
+
 test.serial("Load preset and config correctly when importFrom.silent fails", async (t) => {
   sinon.stub(importFrom, "silent").returns(undefined);
 

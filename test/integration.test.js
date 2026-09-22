@@ -36,6 +36,43 @@ test.serial('Use "conventional-changelog-angular" by default', async (t) => {
   );
 });
 
+test.serial(
+  'Use "conventional-changelog-conventionalcommits-v10" (render-function writer templates) end to end',
+  async (t) => {
+    const { generateNotes } = await import("../index.js");
+    const commits = [
+      { hash: "111", message: "fix(scope1): First fix" },
+      { hash: "222", message: "feat(scope2): Second feature" },
+    ];
+    const changelog = await generateNotes(
+      { config: "conventional-changelog-conventionalcommits-v10" },
+      { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
+    );
+
+    t.regex(changelog, /### Bug Fixes/);
+    t.regex(changelog, new RegExp(escape("First fix ([111](https://github.com/owner/repo/commit/111))")));
+    t.regex(changelog, /### Features/);
+    t.regex(changelog, new RegExp(escape("Second feature ([222](https://github.com/owner/repo/commit/222))")));
+  }
+);
+
+test.serial("Dispatch to the v9 writer when writerOpts.template is a render function", async (t) => {
+  const writerV8Double = td.func();
+  const writerV9Double = td.func();
+  await td.replaceEsm("../wrappers/conventional-changelog-writer.js", {}, writerV8Double);
+  await td.replaceEsm("../wrappers/conventional-changelog-writer-v9.js", {}, writerV9Double);
+  const { generateNotes } = await import("../index.js");
+
+  const commits = [{ hash: "111", message: "fix(scope1): First fix" }];
+  await generateNotes(
+    { writerOpts: { template: () => "" } },
+    { cwd, options: { repositoryUrl }, lastRelease, nextRelease, commits }
+  );
+
+  td.verify(writerV9Double(td.matchers.anything(), td.matchers.anything(), td.matchers.anything()));
+  t.throws(() => td.verify(writerV8Double(td.matchers.anything(), td.matchers.anything(), td.matchers.anything())));
+});
+
 test.serial("Set conventional-changelog-writer context", async (t) => {
   const cwd = temporaryDirectory();
   const writerDouble = td.func();

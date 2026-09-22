@@ -1,12 +1,12 @@
 import { format } from "url";
 import { find, merge } from "lodash-es";
 import { CommitParser } from "conventional-commits-parser";
-import writer from "./wrappers/conventional-changelog-writer.js";
 import { filterRevertedCommitsSync } from "conventional-commits-filter";
 import { readPackageUp } from "read-package-up";
 import debugFactory from "debug";
 import loadChangelogConfig from "./lib/load-changelog-config.js";
 import HOSTS_CONFIG from "./lib/hosts-config.js";
+import selectWriter from "./lib/select-writer.js";
 
 const debug = debugFactory("semantic-release:release-notes-generator");
 
@@ -92,5 +92,5 @@ export async function generateNotes(pluginConfig, context) {
   debug("issue: %o", changelogContext.issue);
   debug("commit: %o", changelogContext.commit);
 
-  return writer(parsedCommits, changelogContext, writerOpts);
+  return selectWriter(writerOpts)(parsedCommits, changelogContext, writerOpts);
 }
