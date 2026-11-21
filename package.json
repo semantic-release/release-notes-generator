@@ -71,7 +71,7 @@
     "all": true
   },
   "peerDependencies": {
-    "semantic-release": ">=20.1.0"
+    "@semantic-release/core": "^1.0.0"
   },
   "lockfile-lint": {
     "path": "package-lock.json",
